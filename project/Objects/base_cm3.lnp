@@ -29,6 +29,7 @@
 ".\objects\stm32f10x_it.o"
 ".\objects\bsp_led.o"
 ".\objects\bsp_usart.o"
+".\objects\bsp_dht11.o"
 ".\objects\port.o"
 ".\objects\heap_4.o"
 ".\objects\croutine.o"

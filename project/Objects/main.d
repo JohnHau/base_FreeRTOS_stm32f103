@@ -42,3 +42,4 @@
 .\objects\main.o: ..\FreeRTOS_v9\include\queue.h
 .\objects\main.o: ..\user\led\bsp_led.h
 .\objects\main.o: ..\user\usart\bsp_usart.h
+.\objects\main.o: ..\user\dht11\bsp_dht11.h

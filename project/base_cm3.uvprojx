@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\library\CMSIS;..\library\FWlib\inc;..\FreeRTOS_v9\include;..\FreeRTOS_v9\port\RVDS\ARM_CM3;..\user;..\user\led;..\user\usart</IncludePath>
+              <IncludePath>..\library\CMSIS;..\library\FWlib\inc;..\FreeRTOS_v9\include;..\FreeRTOS_v9\port\RVDS\ARM_CM3;..\user;..\user\led;..\user\usart;..\user\dht11</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -576,6 +576,11 @@
               <FileName>bsp_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\usart\bsp_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dht11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\dht11\bsp_dht11.c</FilePath>
             </File>
           </Files>
         </Group>

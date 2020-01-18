@@ -140,9 +140,34 @@ void PendSV_Handler(void)
   * @retval None
   */
 
+static uint32_t TimingDelay;
+
+void Delay_us(uint32_t nTime)
+{ 
+	TimingDelay = nTime;	
+
+	// 使能滴答定时器  
+	SysTick->CTRL |=  SysTick_CTRL_ENABLE_Msk;
+
+	while(TimingDelay != 0);
+}
+void TimingDelay_Decrement(void)
+{
+	if (TimingDelay != 0x00)
+	{ 
+		TimingDelay--;
+	}
+}
 extern void xPortSysTickHandler(void);
 void SysTick_Handler(void)
 {
+	
+	
+	#if 0
+	TimingDelay_Decrement();	
+	#endif
+	
+	
 	#if 1
 	  #if (INCLUDE_xTaskGetSchedulerState  == 1 )
       if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
@@ -169,12 +194,21 @@ void USART1_IRQHandler(void)
 }
 
 
+
+uint32_t timer =0;
 void  TIM6_IRQHandler (void)
 {
-
+	if ( TIM_GetITStatus( TIM6, TIM_IT_Update) != RESET ) 
+	{	
+		timer++;
+		if(timer > 100000)
+		{
+			printf("timer\r\n");
+			timer = 0;
+		}
+			TIM_ClearITPendingBit(TIM6 , TIM_FLAG_Update);  		 
+	}		 	
 }
-
-
 
 
 
