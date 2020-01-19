@@ -239,18 +239,17 @@ static uint8_t DHT11_ReadByte ( void )
 uint8_t DHT11_Read_TempAndHumidity(DHT11_Data_TypeDef *DHT11_Data)
 { 
 
-
-
 	/*输出模式*/
 	DHT11_Mode_Out_PP();
 	/*主机拉低*/
 	DHT11_Dout_0;
 	/*延时18ms*/
 	//Delay_us(18000);
-	portDISABLE_INTERRUPTS();	
-  DHT11_delay_2us(9000);
+	//portDISABLE_INTERRUPTS();	
+  //DHT11_delay_2us(9000);
+	vTaskDelay(18);
 	//vTaskDelay(20);
-
+  portDISABLE_INTERRUPTS();	
 	/*总线拉高 主机延时30us*/
 	DHT11_Dout_1; 
 
@@ -316,7 +315,7 @@ void DHT11_Task(void *para)
 		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
 			{
 				
-				printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
+				printf("\r\n Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
 				DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
 			}			
 			else
