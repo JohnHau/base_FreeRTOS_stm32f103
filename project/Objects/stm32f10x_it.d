@@ -1,4 +1,5 @@
 .\objects\stm32f10x_it.o: ..\user\stm32f10x_it.c
+.\objects\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\stm32f10x_it.o: ..\user\stm32f10x_it.h
 .\objects\stm32f10x_it.o: ..\library\CMSIS\stm32f10x.h
 .\objects\stm32f10x_it.o: ..\library\CMSIS\core_cm3.h
@@ -29,4 +30,16 @@
 .\objects\stm32f10x_it.o: ..\library\FWlib\inc\stm32f10x_usart.h
 .\objects\stm32f10x_it.o: ..\library\FWlib\inc\stm32f10x_wwdg.h
 .\objects\stm32f10x_it.o: ..\library\FWlib\inc\misc.h
-.\objects\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\FreeRTOS.h
+.\objects\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\stm32f10x_it.o: ..\user\FreeRTOSConfig.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\projdefs.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\portable.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\deprecated_definitions.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\port\RVDS\ARM_CM3\portmacro.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\mpu_wrappers.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\task.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\list.h
+.\objects\stm32f10x_it.o: ..\FreeRTOS_v9\include\queue.h
+.\objects\stm32f10x_it.o: ..\user\usart\bsp_usart.h
+.\objects\stm32f10x_it.o: ..\user\dht11\bsp_dht11.h

@@ -81,7 +81,7 @@ extern void Delay_us(uint32_t nTime);
 extern void BASIC_TIM_Init(void);
 
 
-
+extern QueueHandle_t uart1_Queue;
 
 #endif /* __DHT11_H */
 

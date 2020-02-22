@@ -3,8 +3,9 @@
 #include "task.h"
 #include "queue.h"
 #include "bsp_dht11.h"
+#include "bsp_usart.h"
 
-
+QueueHandle_t uart1_Queue =NULL;
 
 static void                           DHT11_GPIO_Config                       ( void );
 static void                           DHT11_Mode_IPU                          ( void );
@@ -306,11 +307,31 @@ portENABLE_INTERRUPTS();
 
 void DHT11_Task(void *para)
 {
+	
+  
+	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
+	uint32_t r_queue;	/* 定义一个接收消息的变量 */
 	DHT11_Data_TypeDef DHT11_Data;
 	DHT11_Init ();
   BASIC_TIM_Init();
+	printf("DHT11 tatsk\r\n");
+	
+		/* 创建Test_Queue */
+  uart1_Queue = xQueueCreate((UBaseType_t ) QUEUE_LEN,/* 消息队列的长度 */
+                            (UBaseType_t ) QUEUE_SIZE);/* 消息的大小 */
+  if(NULL != uart1_Queue)
+    printf("创建uart1_Queue消息队列成功!\r\n");
+	
 	while(1)
-	{
+	{	
+		#if 1
+		 
+		//xReturn = xQueueReceive( uart1_Queue,&r_queue,0);
+		xReturn = xQueueReceive( uart1_Queue,&r_queue,portMAX_DELAY);
+	 if(pdTRUE == xReturn)
+      printf("本次接收到的数据是%d\n\n",r_queue);		
+		#endif
+		
 		//portDISABLE_INTERRUPTS();
 		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
 			{

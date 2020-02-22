@@ -24,9 +24,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f10x_it.h"
-
 #include <stdio.h>
+#include "stm32f10x_it.h"
+#include "FreeRTOS.h"					//FreeRTOS使用		  
+#include "task.h" 
+#include "queue.h"
+#include "bsp_usart.h"
+#include "bsp_dht11.h"
 
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -190,6 +194,37 @@ void SysTick_Handler(void)
 /******************************************************************************/
 void USART1_IRQHandler(void)
 {
+	
+	static uint8_t i=0;
+	uint8_t ch_rx_uart1=0;
+	uint32_t send_data = 0x11111111;
+	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
+	BaseType_t  xHigherPriorityTaskWoken;
+	printf("uart1 hi there\r\n");
+	if(USART_GetITStatus(DEBUG_USARTx , USART_IT_RXNE) != RESET)	 //检查指定的USART中断发生与否
+  {
+    
+		
+		ch_rx_uart1=USART_ReceiveData(DEBUG_USARTx ); //读取接收缓冲区数据。    /* Read one byte from the receive data register */
+		buffer_rx_uart1[i++] = ch_rx_uart1; 
+      
+		  //if(i >=64)i=0;
+		
+		printf("%c is received!\r\n",ch_rx_uart1);
+		
+		xReturn=xQueueSendFromISR(uart1_Queue,&send_data,&xHigherPriorityTaskWoken);
+		if(pdPASS == xReturn)
+		{
+        printf("data sent\r\n");
+		}
+		else
+		{
+			printf("Error: send data\r\n");
+		}
+  }
+
+	
+	
 	
 }
 

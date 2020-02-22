@@ -41,3 +41,4 @@
 .\objects\bsp_dht11.o: ..\FreeRTOS_v9\include\list.h
 .\objects\bsp_dht11.o: ..\FreeRTOS_v9\include\queue.h
 .\objects\bsp_dht11.o: ..\user\dht11\bsp_dht11.h
+.\objects\bsp_dht11.o: ..\user\usart\bsp_usart.h
