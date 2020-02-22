@@ -212,7 +212,8 @@ void USART1_IRQHandler(void)
 		
 		printf("%c is received!\r\n",ch_rx_uart1);
 		
-		xReturn=xQueueSendFromISR(uart1_Queue,&send_data,&xHigherPriorityTaskWoken);
+		//xReturn=xQueueSendFromISR(uart1_Queue,&send_data,&xHigherPriorityTaskWoken);
+		xReturn=xQueueSendFromISR(uart1_Queue,&ch_rx_uart1,&xHigherPriorityTaskWoken);
 		if(pdPASS == xReturn)
 		{
         printf("data sent\r\n");
