@@ -4,10 +4,12 @@
 #include "FreeRTOS.h"
 #include "task.h"	
 #include "queue.h"	
-
+#include "semphr.h"	
 #include "bsp_usart.h"
-uint8_t buffer_rx_uart1[SIZE_BUFFER_UART1 ]={0};
 
+
+uint8_t buffer_rx_uart1[SIZE_BUFFER_UART1 ]={0};
+SemaphoreHandle_t BinarySem_Handle = NULL;
 
  /**
   * @brief  配置嵌套向量中断控制器NVIC
@@ -42,13 +44,17 @@ void USART_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-
+  DMA_InitTypeDef      DMA_InitStruct;
+	
+	
 	// 打开串口GPIO的时钟
 	DEBUG_USART_GPIO_APBxClkCmd(DEBUG_USART_GPIO_CLK, ENABLE);
 	
 	// 打开串口外设的时钟
 	DEBUG_USART_APBxClkCmd(DEBUG_USART_CLK, ENABLE);
-
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+	
+	
 	// 将USART Tx的GPIO配置为推挽复用模式
 	GPIO_InitStructure.GPIO_Pin = DEBUG_USART_TX_GPIO_PIN;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -81,10 +87,63 @@ void USART_Config(void)
 	NVIC_Configuration();
 	
 	// 使能串口接收中断
-	USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, ENABLE);	
+	//USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, ENABLE);	
+	USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, DISABLE);	
+	
+	USART_ITConfig(DEBUG_USARTx, USART_IT_TC, DISABLE);
 	
 	// 使能串口
-	USART_Cmd(DEBUG_USARTx, ENABLE);	    
+	//USART_Cmd(DEBUG_USARTx, ENABLE);	    
+	
+	 USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
+	
+	
+	
+/*DMA config*/
+/*USART2 recv DMA config*/
+
+    DMA_DeInit(DMA1_Channel5);
+
+    DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)(&(USART1->DR));
+
+    DMA_InitStruct.DMA_MemoryBaseAddr = (uint32_t)buffer_rx_uart1;
+
+    DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC;
+
+    DMA_InitStruct.DMA_BufferSize = SIZE_BUFFER_UART1;  
+		
+    DMA_InitStruct.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+
+    DMA_InitStruct.DMA_MemoryInc = DMA_MemoryInc_Enable;
+
+    DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+
+    DMA_InitStruct.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+
+    DMA_InitStruct.DMA_Mode = DMA_Mode_Normal;
+
+    DMA_InitStruct.DMA_Priority = DMA_Priority_VeryHigh;
+
+    DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;
+
+    DMA_Init(DMA1_Channel5, &DMA_InitStruct);
+
+    DMA_Cmd(DMA1_Channel5, ENABLE); 
+
+ 
+
+    USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
+    USART_Cmd(USART1, ENABLE);
+	
+	
+	BinarySem_Handle = xSemaphoreCreateBinary();
+	
+	if(BinarySem_Handle != NULL)
+	{
+	  printf("create BinarySem_Hanle ok\r\n");
+	}
+	
+	
 }
 
 /*****************  发送一个字节 **********************/

@@ -1,8 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"	
 #include "bsp_led.h"   
-
+#include "bsp_usart.h"
 void LED_GPIO_Config(void)
 {		
 		/*定义一个GPIO_InitTypeDef类型的结构体*/
@@ -39,8 +43,23 @@ void LED_GPIO_Config(void)
 void LED1_Task(void *para)
 {
 
+	BaseType_t xReturn =pdPASS;
 	while(1)
 	{
+		
+		
+		xReturn =xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
+		
+		
+		if(xReturn == pdPASS)
+		{
+			printf("got data\r\n");
+			
+			//printf("data is %d %d %d\r\n",buffer_rx_uart1[0],buffer_rx_uart1[1],buffer_rx_uart1[2]);
+			printf("data is %s\r\n",buffer_rx_uart1);
+			memset(buffer_rx_uart1, 0, sizeof(buffer_rx_uart1));
+		
+		}
 		LED1(0);//LED1_ON();
 		vTaskDelay(500);
 		LED1(1);//LED1_OFF();

@@ -324,13 +324,13 @@ void DHT11_Task(void *para)
 	
 	while(1)
 	{	
-		#if 1
+#if 0
 		 
 		//xReturn = xQueueReceive( uart1_Queue,&r_queue,0);
 		xReturn = xQueueReceive( uart1_Queue,&r_queue,portMAX_DELAY);
 	 if(pdTRUE == xReturn)
       printf("本次接收到的数据是%d\n\n",r_queue);		
-		#endif
+#endif
 		
 		//portDISABLE_INTERRUPTS();
 		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)

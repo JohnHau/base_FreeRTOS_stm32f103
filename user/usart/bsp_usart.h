@@ -1,8 +1,12 @@
 #ifndef __USART_H
 #define	__USART_H
 
-#include "stm32f10x.h"
-#include <stdio.h>
+//#include "stm32f10x.h"
+//#include <stdio.h>
+//#include "FreeRTOS.h"
+//#include "task.h"	
+//#include "queue.h"	
+#include "semphr.h"	
 
 /** 
   * 串口宏定义，不同的串口挂载的总线和IO不一样，移植时需要修改这几个宏
@@ -104,11 +108,11 @@
 
 
 
-#define SIZE_BUFFER_UART1   128
+#define SIZE_BUFFER_UART1   8
 #define  QUEUE_LEN    4   /* 队列的长度，最大可包含多少个消息 */
 #define  QUEUE_SIZE   4   /* 队列中每个消息大小（字节） */
 
-
+extern SemaphoreHandle_t BinarySem_Handle;
 
 extern uint8_t buffer_rx_uart1[SIZE_BUFFER_UART1];
 
@@ -118,5 +122,9 @@ void USART_Config(void);
 void Usart_SendByte( USART_TypeDef * pUSARTx, uint8_t ch);
 void Usart_SendString( USART_TypeDef * pUSARTx, char *str);
 void Usart_SendHalfWord( USART_TypeDef * pUSARTx, uint16_t ch);
+
+
+
+
 
 #endif /* __USART_H */

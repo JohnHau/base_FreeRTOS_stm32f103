@@ -3,6 +3,7 @@
 #include "FreeRTOS.h"	
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"	
 #include "bsp_led.h"
 #include "bsp_usart.h"
 #include "bsp_dht11.h"
@@ -95,7 +96,7 @@ int main ( void )
 												
 												
 												
-#if 1										
+#if 0										
   xReturn = xTaskCreate((TaskFunction_t)DHT11_Task,
 	                      (const char*)"DHT_Task",
 												(uint16_t)512,

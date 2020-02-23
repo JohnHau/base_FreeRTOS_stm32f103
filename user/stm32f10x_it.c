@@ -29,6 +29,7 @@
 #include "FreeRTOS.h"					//FreeRTOSÊ¹ÓÃ		  
 #include "task.h" 
 #include "queue.h"
+#include "semphr.h"	
 #include "bsp_usart.h"
 #include "bsp_dht11.h"
 
@@ -186,6 +187,29 @@ void SysTick_Handler(void)
 
 
 
+
+void uart1_DMA_rx_data(void)
+{
+	BaseType_t pxHigherPriorityTaskWoken;
+	//shut DMA for disturbing
+	DMA_Cmd(DMA1_Channel5,DISABLE);
+	
+	//clear DMA flags
+	DMA_ClearFlag(DMA1_FLAG_TC5);
+	
+	DMA1_Channel5->CNDTR = SIZE_BUFFER_UART1;
+	//DMA1_Channel5->CNDTR = 5;
+	
+	//enalble DMA
+	DMA_Cmd(DMA1_Channel5,ENABLE);
+	
+	
+	xSemaphoreGiveFromISR(BinarySem_Handle, &pxHigherPriorityTaskWoken);
+	
+	portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+
+}
+
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
@@ -195,6 +219,7 @@ void SysTick_Handler(void)
 void USART1_IRQHandler(void)
 {
 	
+#if 0
 	static uint8_t i=0;
 	uint8_t ch_rx_uart1=0;
 	uint32_t send_data = 0x11111111;
@@ -224,9 +249,23 @@ void USART1_IRQHandler(void)
 		}
   }
 
+#endif
 	
 	
 	
+	
+	uint32_t ulReturn;
+	ulReturn = taskENTER_CRITICAL_FROM_ISR();
+	printf("usart1 isr:\r\n");
+	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_IDLE) != RESET)
+	{
+		printf("usart1 isr:idle\r\n");
+		uart1_DMA_rx_data();// release sema
+		USART_ReceiveData(DEBUG_USARTx);//clear flags
+		
+	}
+	
+	taskEXIT_CRITICAL_FROM_ISR(ulReturn);
 }
 
 
