@@ -47,7 +47,7 @@ void LED1_Task(void *para)
 	while(1)
 	{
 		
-		
+#if 0
 		xReturn =xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
 		
 		
@@ -60,6 +60,7 @@ void LED1_Task(void *para)
 			memset(buffer_rx_uart1, 0, sizeof(buffer_rx_uart1));
 		
 		}
+#endif
 		LED1(0);//LED1_ON();
 		vTaskDelay(500);
 		LED1(1);//LED1_OFF();

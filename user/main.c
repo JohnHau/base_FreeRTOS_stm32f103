@@ -96,7 +96,7 @@ int main ( void )
 												
 												
 												
-#if 0										
+#if 1										
   xReturn = xTaskCreate((TaskFunction_t)DHT11_Task,
 	                      (const char*)"DHT_Task",
 												(uint16_t)512,

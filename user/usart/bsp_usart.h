@@ -108,7 +108,7 @@
 
 
 
-#define SIZE_BUFFER_UART1   8
+#define SIZE_BUFFER_UART1   2048
 #define  QUEUE_LEN    4   /* 队列的长度，最大可包含多少个消息 */
 #define  QUEUE_SIZE   4   /* 队列中每个消息大小（字节） */
 
