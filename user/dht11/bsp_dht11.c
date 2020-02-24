@@ -349,20 +349,33 @@ void DHT11_Task(void *para)
 		
 		if(xReturn == pdPASS)
 		{
-			printf("got data\r\n");
+			//printf("got data\r\n");
 			
 			//printf("data is %d %d %d\r\n",buffer_rx_uart1[0],buffer_rx_uart1[1],buffer_rx_uart1[2]);
-			printf("data is %s\r\n",buffer_rx_uart1);
+			//printf("data is %s\r\n",buffer_rx_uart1);
 			
+			
+			#if 1
+			printf("rec is %c-%c-%c-%c-%c\r\n",buffer_rx_uart1[0],
+			                                           buffer_rx_uart1[1],
+			                                           buffer_rx_uart1[2],
+			                                           buffer_rx_uart1[3],
+			                                           buffer_rx_uart1[4]);
+			
+			//memset(buffer_rx_uart1,0, sizeof(buffer_rx_uart1));
+			#endif
+			
+
 			
 			if(strcmp("dht11",(int8_t*)buffer_rx_uart1) == 0)
+			//if(1)
 			{
-				
+				printf("RH-CEL data begin:\r\n");
 					//portDISABLE_INTERRUPTS();
 					if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
 						{
 							
-							printf("\r\n Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
+							printf("Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
 							DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
 						}			
 						else

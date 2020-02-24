@@ -20,6 +20,7 @@
 #define  DEBUG_USART_APBxClkCmd         RCC_APB2PeriphClockCmd
 #define  DEBUG_USART_BAUDRATE           115200
 
+
 // USART GPIO Òý½Åºê¶¨Òå
 #define  DEBUG_USART_GPIO_CLK           (RCC_APB2Periph_GPIOA)
 #define  DEBUG_USART_GPIO_APBxClkCmd    RCC_APB2PeriphClockCmd
@@ -115,7 +116,7 @@
 extern SemaphoreHandle_t BinarySem_Handle;
 
 extern uint8_t buffer_rx_uart1[SIZE_BUFFER_UART1];
-
+//extern char buffer_rx_uart1[SIZE_BUFFER_UART1];
 
 
 void USART_Config(void);

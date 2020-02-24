@@ -9,6 +9,7 @@
 
 
 uint8_t buffer_rx_uart1[SIZE_BUFFER_UART1 ]={0};
+//char buffer_rx_uart1[SIZE_BUFFER_UART1 ]={0};
 SemaphoreHandle_t BinarySem_Handle = NULL;
 
  /**
