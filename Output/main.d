@@ -36,4 +36,7 @@
 ..\..\output\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\inttypes.h
 ..\..\output\main.o: ..\..\User\./systick/bsp_SysTick.h
 ..\..\output\main.o: ..\..\User\./dht11/bsp_dht11.h
+..\..\output\main.o: ..\..\User\./rtc/bsp_rtc.h
+..\..\output\main.o: ..\..\User\./rtc/bsp_calendar.h
+..\..\output\main.o: ..\..\User\./rtc/bsp_date.h
 ..\..\output\main.o: ..\..\User\./flash/bsp_spi_flash.h

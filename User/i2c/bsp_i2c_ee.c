@@ -843,8 +843,10 @@ void oled_096_print(uint8_t col, uint8_t row, int8_t*str)
 {
   unsigned char x,y;
   unsigned int i=0;
-	y=0;
-  for(y=0;y<8;y++)
+	unsigned char pos=0;
+	y=col;
+  //for(y=0;y<8;y++)
+	while(str[pos] && y<8)
     {
       //Write_IIC_Command(0xb0+y);
       //Write_IIC_Command(0x00);
@@ -858,7 +860,7 @@ void oled_096_print(uint8_t col, uint8_t row, int8_t*str)
 		write_buf[0]=0x00;
 	  ee_WriteBytes(write_buf, 0x00, 1);
 		
-		write_buf[0]=0x10;
+		write_buf[0]=0x10+row;
 	  ee_WriteBytes(write_buf, 0x00, 1);
 		
 			
@@ -872,7 +874,7 @@ void oled_096_print(uint8_t col, uint8_t row, int8_t*str)
         {
           //Write_IIC_Data(show1[i++]);
 					
-					write_buf[0]=ASCII_16_Dot[str[y]-'a'][i++];
+					write_buf[0]=ASCII_16_Dot[str[pos]-'a'][i++];
 					
 					if(i==16)i=0;
 					//write_buf[0]=0xff;
@@ -881,7 +883,11 @@ void oled_096_print(uint8_t col, uint8_t row, int8_t*str)
 					
         }
 				
-				xdelay(20);
+				//xdelay(20);
+				
+				y++;
+				pos++;
+				
 				
     }
 }

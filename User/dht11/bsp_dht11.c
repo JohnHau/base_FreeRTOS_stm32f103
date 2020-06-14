@@ -31,6 +31,11 @@ static uint8_t                        DHT11_ReadByte                          ( 
 void DHT11_delay(uint32_t nus)
 {
 
+	
+	Delay_us(nus);
+	
+	
+	#if 0
   while(nus)
 	{
 
@@ -38,6 +43,11 @@ void DHT11_delay(uint32_t nus)
 
 			nus--;
 	}
+	
+	#endif
+	
+	
+	
 
 }
 
