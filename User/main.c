@@ -60,7 +60,7 @@ TestStatus Buffercmp(uint8_t* pBuffer1,uint8_t* pBuffer2, uint16_t BufferLength)
  */
  
  
- int8_t tstr[]="hello world";	
+ int8_t tstr[]="hello";	
  
  
  uint32_t rt_cnt=0;
@@ -74,7 +74,8 @@ int main(void)
 	USART_Config();
 	printf("\r\n 这是一个8Mbyte串行flash(W25Q64)实验 \r\n");
 	
-	
+	//=================================================================
+	#if  1
 	i2c_CfgGpio();
 	
 	
@@ -85,7 +86,7 @@ int main(void)
 	fill_picture(0x00);
 	oled_096_print(0, 0, tstr);
 	
-	
+	while(1);
 	
 	
 	
@@ -118,8 +119,8 @@ int main(void)
 	}
 	
 	
-	
-	
+#endif
+//===================================================================================	
 	
 	
 	

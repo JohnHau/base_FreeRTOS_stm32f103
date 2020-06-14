@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
+#include "bsp_usart.h"
 extern void TimingDelay_Decrement(void);
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -139,6 +140,28 @@ void SysTick_Handler(void)
 	
 	TimingDelay_Decrement();	
 }
+
+
+
+// 串口中断服务函数
+void DEBUG_USART_IRQHandler(void)
+{
+  uint8_t ucTemp;
+	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_RXNE)!=RESET)
+	{		
+		ucTemp = USART_ReceiveData(DEBUG_USARTx);
+    USART_SendData(DEBUG_USARTx,ucTemp);    
+	}	 
+}
+
+
+
+
+
+
+
+
+
 
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */

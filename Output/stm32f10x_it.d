@@ -29,3 +29,5 @@
 ..\..\output\stm32f10x_it.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 ..\..\output\stm32f10x_it.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 ..\..\output\stm32f10x_it.o: ..\..\Libraries\FWlib\inc\misc.h
+..\..\output\stm32f10x_it.o: ..\..\User\usart\bsp_usart.h
+..\..\output\stm32f10x_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
