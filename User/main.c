@@ -34,14 +34,15 @@ typedef enum { FAILED = 0, PASSED = !FAILED} TestStatus;
 #define countof(a)      (sizeof(a) / sizeof(*(a)))
 #define  BufferSize (countof(Tx_Buffer)-1)
 
-#define  FLASH_WriteAddress     0x00000
+//#define  FLASH_WriteAddress     0x00000
+#define  FLASH_WriteAddress     4095
 #define  FLASH_ReadAddress      FLASH_WriteAddress
 #define  FLASH_SectorToErase    FLASH_WriteAddress
 
      
 
 /* 发送缓冲区初始化 */
-uint8_t Tx_Buffer[] = "感谢您选用野火stm32开发板\r\n";
+uint8_t Tx_Buffer[] = "hello world stm32 w25q64\r\n";
 uint8_t Rx_Buffer[BufferSize];
 
 __IO uint32_t DeviceID = 0;
@@ -60,7 +61,7 @@ TestStatus Buffercmp(uint8_t* pBuffer1,uint8_t* pBuffer2, uint16_t BufferLength)
  */
  
  
- int8_t tstr[]="hello";	
+ int8_t tstr[]="hello 23.80";	
  
  
  uint32_t rt_cnt=0;
@@ -134,7 +135,13 @@ int main(void)
 	#endif
 	
 	oled_096_xprint(0, 0, tstr);
-	
+	oled_096_xprint(0, 1, tstr);
+	oled_096_xprint(0, 2, tstr);
+	oled_096_xprint(0, 3, tstr);
+	oled_096_xprint(0, 4, tstr);
+	oled_096_xprint(0, 5, tstr);
+	oled_096_xprint(0, 6, tstr);
+	oled_096_xprint(0, 7, tstr);
 	
 	//oled_096_xprint(8, 1, tstr);
 	//oled_096_xprint(2, 2, tstr);

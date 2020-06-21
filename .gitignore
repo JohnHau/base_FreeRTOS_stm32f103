@@ -1,3 +1,7 @@
 *.o
+*.map
+*.dep
+*.htm
+*.crf
 project/Objects/
 project/Listings/
