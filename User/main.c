@@ -85,7 +85,18 @@ extern __IO uint32_t TimeDisplay ;
  
  
  
- 
+void mxdelay(uint32_t x)
+{
+uint32_t m,n;
+	while(x)
+	{
+	for(m=0;m<1000;m++)
+		for(n=0;n<1000;n++);
+		
+		x--;
+	}
+
+}
 int main(void)
 { 	
 	
@@ -106,6 +117,9 @@ int main(void)
 	
 	
 	fill_picture(0x00);
+	//mxdelay(30);
+	
+	#if 0
 	oled_096_print(0, 0, tstr);
 	oled_096_print(1, 1, tstr);
 	oled_096_print(2, 2, tstr);
@@ -116,6 +130,29 @@ int main(void)
 	
 	oled_096_print(6, 6, tstr);
 	oled_096_print(6, 7, tstr);
+	
+	#endif
+	
+	oled_096_xprint(0, 0, tstr);
+	
+	
+	//oled_096_xprint(8, 1, tstr);
+	//oled_096_xprint(2, 2, tstr);
+	
+	//oled_096_xprint(3, 3, tstr);
+	//oled_096_xprint(4, 4, tstr);
+	//oled_096_xprint(5, 5, tstr);
+	
+	//oled_096_xprint(6, 6, tstr);
+	//oled_096_xprint(6, 7, tstr);
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/* 配置SysTick 为1us中断一次 */
