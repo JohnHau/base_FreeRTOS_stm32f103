@@ -47,10 +47,10 @@ void LED1_Task(void *para)
 	while(1)
 	{
 		
-#if 0
+#if 1
 		xReturn =xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
 		
-		
+#if 0	
 		if(xReturn == pdPASS)
 		{
 			printf("got data\r\n");
@@ -61,10 +61,37 @@ void LED1_Task(void *para)
 		
 		}
 #endif
+		
+		
+#if 1
+		if(xReturn == pdPASS)
+		{
+			vTaskDelay(500);
+			printf("\r\ngot sem\r\n");
+			#if 1
+			LED1(0);//LED1_ON();
+			vTaskDelay(500);
+			LED1(1);//LED1_OFF();
+			vTaskDelay(500);
+		
+		  #endif
+		
+		}
+		
+#endif
+		
+		
+#endif
+		
+		
+		
+#if 0
 		LED1(0);//LED1_ON();
 		vTaskDelay(500);
 		LED1(1);//LED1_OFF();
 		vTaskDelay(500);
+		
+#endif
 	}
 	
 	
@@ -75,13 +102,25 @@ void LED1_Task(void *para)
 #if 1
 void LED2_Task(void *para)
 {
-
+  BaseType_t xReturn =pdPASS;
 	while(1)
 	{
+		
+		
+		xReturn = xSemaphoreGive(BinarySem_Handle);
+		
+		if(xReturn == pdPASS)
+		{
+		
+		     printf("\r\ngive semaphore ok\r\n");
+		}
+		vTaskDelay(5000);
+#if 0
 		LED2(0);//LED2_ON();
 		vTaskDelay(500);
 		LED2(1);//LED2_OFF();
 		vTaskDelay(500);
+#endif
 	}
 	
 	

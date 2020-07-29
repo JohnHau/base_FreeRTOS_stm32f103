@@ -88,13 +88,13 @@ void USART_Config(void)
 	NVIC_Configuration();
 	
 	// 使能串口接收中断
-	//USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, ENABLE);	
-	USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, DISABLE);	
+	USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, ENABLE);	
+	//USART_ITConfig(DEBUG_USARTx, USART_IT_RXNE, DISABLE);	
 	
 	USART_ITConfig(DEBUG_USARTx, USART_IT_TC, DISABLE);
 	
 	// 使能串口
-	//USART_Cmd(DEBUG_USARTx, ENABLE);	    
+	USART_Cmd(DEBUG_USARTx, ENABLE);	    
 	
 	 USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
 	
@@ -102,7 +102,7 @@ void USART_Config(void)
 	
 /*DMA config*/
 /*USART2 recv DMA config*/
-
+#if 0
     DMA_DeInit(DMA1_Channel5);
 
     DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)(&(USART1->DR));
@@ -135,7 +135,7 @@ void USART_Config(void)
 
     USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
     USART_Cmd(USART1, ENABLE);
-	
+	#endif
 	
 	BinarySem_Handle = xSemaphoreCreateBinary();
 	

@@ -219,13 +219,15 @@ void uart1_DMA_rx_data(void)
 void USART1_IRQHandler(void)
 {
 	
-#if 0
+#if 1
 	static uint8_t i=0;
 	uint8_t ch_rx_uart1=0;
 	uint32_t send_data = 0x11111111;
 	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
 	BaseType_t  xHigherPriorityTaskWoken;
+	BaseType_t pxHigherPriorityTaskWoken;
 	printf("uart1 hi there\r\n");
+	
 	if(USART_GetITStatus(DEBUG_USARTx , USART_IT_RXNE) != RESET)	 //检查指定的USART中断发生与否
   {
     
@@ -236,7 +238,11 @@ void USART1_IRQHandler(void)
 		  //if(i >=64)i=0;
 		
 		printf("%c is received!\r\n",ch_rx_uart1);
+		xSemaphoreGiveFromISR(BinarySem_Handle, &pxHigherPriorityTaskWoken);
+	
+	  //portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
 		
+#if 0
 		//xReturn=xQueueSendFromISR(uart1_Queue,&send_data,&xHigherPriorityTaskWoken);
 		xReturn=xQueueSendFromISR(uart1_Queue,&ch_rx_uart1,&xHigherPriorityTaskWoken);
 		if(pdPASS == xReturn)
@@ -247,13 +253,18 @@ void USART1_IRQHandler(void)
 		{
 			printf("Error: send data\r\n");
 		}
+		
+#endif
+		
+		
+		
   }
 
 #endif
 	
 	
 	
-	
+#if 0
 	uint32_t ulReturn;
 	ulReturn = taskENTER_CRITICAL_FROM_ISR();
 	printf("usart1 isr:\r\n");
@@ -266,6 +277,7 @@ void USART1_IRQHandler(void)
 	}
 	
 	taskEXIT_CRITICAL_FROM_ISR(ulReturn);
+#endif
 }
 
 

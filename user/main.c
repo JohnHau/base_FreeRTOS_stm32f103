@@ -36,6 +36,10 @@ void SysTick_Init(void)
 static TaskHandle_t LED1_Task_Handle = NULL;
 static TaskHandle_t LED2_Task_Handle = NULL;
 static TaskHandle_t DHT11_Task_Handle = NULL;
+
+
+
+
 int main ( void )
 {
 	BaseType_t xReturn =pdPASS;
@@ -96,7 +100,7 @@ int main ( void )
 												
 												
 												
-#if 1										
+#if 0										
   xReturn = xTaskCreate((TaskFunction_t)DHT11_Task,
 	                      (const char*)"DHT_Task",
 												(uint16_t)512,
