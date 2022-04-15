@@ -25,6 +25,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "stm32f10x_it.h"
 #include "FreeRTOS.h"					//FreeRTOS使用		  
 #include "task.h" 
@@ -226,7 +228,7 @@ void USART1_IRQHandler(void)
 	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
 	BaseType_t  xHigherPriorityTaskWoken;
 	BaseType_t pxHigherPriorityTaskWoken;
-	printf("uart1 hi there\r\n");
+	//printf("uart1 hi there\r\n");
 	
 	if(USART_GetITStatus(DEBUG_USARTx , USART_IT_RXNE) != RESET)	 //检查指定的USART中断发生与否
   {
@@ -235,10 +237,36 @@ void USART1_IRQHandler(void)
 		ch_rx_uart1=USART_ReceiveData(DEBUG_USARTx ); //读取接收缓冲区数据。    /* Read one byte from the receive data register */
 		buffer_rx_uart1[i++] = ch_rx_uart1; 
       
-		  //if(i >=64)i=0;
 		
-		printf("%c is received!\r\n",ch_rx_uart1);
-		xSemaphoreGiveFromISR(BinarySem_Handle, &pxHigherPriorityTaskWoken);
+		//printf("c is %c\r\n",buffer_rx_uart1[i-1]);
+		  //if(i >=64)i=0;
+		if(buffer_rx_uart1[i-1] == '\n' || buffer_rx_uart1[i-1] == '\r')
+		{
+			
+			printf("str is %s",buffer_rx_uart1);
+			printf("c is %d\n",buffer_rx_uart1[0]);
+			printf("c is %d\n",buffer_rx_uart1[1]);
+			printf("c is %d\n",buffer_rx_uart1[2]);
+			printf("c is %d\n",buffer_rx_uart1[3]);
+			printf("c is %d\n",buffer_rx_uart1[4]);
+			printf("c is %d\n",buffer_rx_uart1[5]);
+			printf("c is %d\n",buffer_rx_uart1[6]);
+			
+			if(strcmp("hello\r",(char*)buffer_rx_uart1) == 0)
+			{
+			    printf("world\n");
+			}
+				if(strcmp("exit\r",(char*)buffer_rx_uart1) == 0)
+			{
+			    printf("zzzz\n");
+			}
+			
+			memset(buffer_rx_uart1,0,64);
+			i=0;
+			//printf("%c is received!\r\n",ch_rx_uart1);
+		}
+		//printf("%c is received!\r\n",ch_rx_uart1);
+		//xSemaphoreGiveFromISR(BinarySem_Handle, &pxHigherPriorityTaskWoken);
 	
 	  //portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
 		

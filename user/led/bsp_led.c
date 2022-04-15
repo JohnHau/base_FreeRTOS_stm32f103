@@ -7,6 +7,10 @@
 #include "semphr.h"	
 #include "bsp_led.h"   
 #include "bsp_usart.h"
+#include "bsp_dht11.h"
+
+#include "../library/GUI/lvgl/lvgl.h"
+
 void LED_GPIO_Config(void)
 {		
 		/*定义一个GPIO_InitTypeDef类型的结构体*/
@@ -39,7 +43,7 @@ void LED_GPIO_Config(void)
 		GPIO_SetBits(LED2_GPIO_PORT, LED2_GPIO_PIN);
 }
 
-
+DHT11_Data_TypeDef DHT11_Data;
 void LED1_Task(void *para)
 {
 
@@ -47,7 +51,7 @@ void LED1_Task(void *para)
 	while(1)
 	{
 		
-#if 1
+#if 0
 		xReturn =xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
 		
 #if 0	
@@ -63,7 +67,7 @@ void LED1_Task(void *para)
 #endif
 		
 		
-#if 1
+#if 0
 		if(xReturn == pdPASS)
 		{
 			vTaskDelay(500);
@@ -85,11 +89,27 @@ void LED1_Task(void *para)
 		
 		
 		
-#if 0
+#if 1
 		LED1(0);//LED1_ON();
-		vTaskDelay(500);
+		vTaskDelay(1000);
 		LED1(1);//LED1_OFF();
-		vTaskDelay(500);
+		vTaskDelay(1000);
+		
+		
+
+		
+		
+		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
+			{
+				printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
+				DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
+			}			
+			else
+			{
+				printf("Read DHT11 ERROR!\r\n");
+			}
+		
+		
 		
 #endif
 	}
@@ -106,7 +126,7 @@ void LED2_Task(void *para)
 	while(1)
 	{
 		
-		
+		#if 0
 		xReturn = xSemaphoreGive(BinarySem_Handle);
 		
 		if(xReturn == pdPASS)
@@ -115,11 +135,26 @@ void LED2_Task(void *para)
 		     printf("\r\ngive semaphore ok\r\n");
 		}
 		vTaskDelay(5000);
-#if 0
+		
+		#endif
+		
+		
+#if 1
 		LED2(0);//LED2_ON();
 		vTaskDelay(500);
 		LED2(1);//LED2_OFF();
 		vTaskDelay(500);
+		printf("\r\nled2 on off\r\n");
+		
+		
+				
+		lv_tick_inc(1);
+		lv_task_handler();
+		
+		
+		
+		
+		
 #endif
 	}
 	
