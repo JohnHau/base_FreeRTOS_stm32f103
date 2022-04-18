@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "stm32f10x.h"
 #include "FreeRTOS.h"	
 #include "task.h"
@@ -8,7 +9,7 @@
 #include "bsp_usart.h"
 #include "bsp_dht11.h"
 
-
+#include "small_text_protocol/stp.h"
 #include "./CRC16/CRC16.h"
 #include "./flash/bsp_spi_flash.h"
 #include "./i2c/bsp_i2c_ee.h"
@@ -17,70 +18,6 @@
 #include "../library/GUI/lv_port_indev.h"
 
 
-
-
-
-
-
- static void btn_event_cb(lv_event_t * e)
- {
-
-     lv_event_code_t code = lv_event_get_code(e);
-     lv_obj_t *btn = lv_event_get_target(e);
-     if(code == LV_EVENT_CLICKED)
-     {
-         static uint8_t cnt =0;
-         cnt ++;
-
-         lv_obj_t *label = lv_obj_get_child(btn,0);
-         lv_label_set_text_fmt(label,"Button: %d",cnt);
-
-     }
- }
- 
- 
- 
- static lv_style_t style_btn;
- 
- void lv_wtest(void)
- {
-     
-	  lv_style_reset(&style_btn);
-	  lv_style_init(&style_btn);
-	 
-	 lv_style_set_bg_opa(&style_btn,LV_OPA_100);
-	 lv_style_set_border_color(&style_btn,lv_color_black());
-	 lv_style_set_border_width(&style_btn,2);
-	 
-	 lv_style_set_text_color(&style_btn,lv_color_black());
-	 
-	 
-	 
-	   lv_obj_t * btn = lv_btn_create(lv_scr_act());
-	 
-	 lv_obj_add_style(btn,&style_btn,LV_STATE_DEFAULT);
-	 
-	 
-     lv_obj_set_pos(btn,10,10);
-     lv_obj_set_size(btn,80,20);
-
-     //lv_obj_add_event_cb(btn,btn_event_cb,LV_EVENT_ALL,NULL);
-
-     lv_obj_t *label = lv_label_create(btn);
-
-	   lv_label_set_text_static(label,"Btn");
-     lv_obj_center(label);
-
- }
- 
- void lv_mytest(void)
- {
-     lv_obj_t *label = lv_label_create(lv_scr_act());
-     lv_label_set_text(label,"Btn");
-     lv_obj_center(label);
- }
- 
- 
 
 
 
@@ -118,7 +55,7 @@ static TaskHandle_t LED2_Task_Handle = NULL;
 static TaskHandle_t DHT11_Task_Handle = NULL;
 
 
-
+static TaskHandle_t stp_Task_Handle = NULL;
 
 typedef enum { FAILED = 0, PASSED = !FAILED} TestStatus;
 
@@ -166,11 +103,10 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 
 
 
-
-
-
 int main ( void )
 {
+	
+	char *ppp = NULL;
 	BaseType_t xReturn =pdPASS;
 	
 	//DHT11_Data_TypeDef DHT11_Data;
@@ -178,14 +114,20 @@ int main ( void )
 	BASIC_TIM_Init();
 	
 	
-	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 	LED_GPIO_Config();
 	//SysTick_Init();
 	USART_Config();
 	
 	
 
+	ppp = malloc(8);
+	if(ppp == NULL)
+		printf("malloc error\r\n");
+	else
+		printf("malloc successfully\r\n");
 	
+	free(ppp);
 	
 	
 	i2c_CfgGpio();
@@ -201,8 +143,10 @@ int main ( void )
 	
 	//lv_obj_get_disp(const lv_obj_t * obj)
 	//lv_theme_mono_init(lv_disp_t * disp, bool dark_bg, const lv_font_t * font);
-	lv_theme_mono_init(NULL, true, &lv_font_montserrat_14);
-	lv_wtest();
+	
+	//lv_theme_mono_init(NULL, true, &lv_font_montserrat_14);
+	
+	//lv_wtest();
 	//lv_mytest();
 	
 
@@ -326,6 +270,20 @@ int main ( void )
 												(void*)NULL,
 												(UBaseType_t)2,
 												(TaskHandle_t*)&LED1_Task_Handle);
+												
+												
+												
+												
+	xReturn = xTaskCreate((TaskFunction_t)stp_thread,
+	                      (const char*)"stp_thread",
+												(uint16_t)512,
+												(void*)NULL,
+												(UBaseType_t)2,
+												(TaskHandle_t*)&stp_Task_Handle);											
+												
+												
+												
+												
 											
 #endif	
 						

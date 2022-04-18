@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>12</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -163,7 +163,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\CMSIS_AGDI.dll</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -601,6 +601,11 @@
               <FileName>CRC16.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\CRC16\CRC16.c</FilePath>
+            </File>
+            <File>
+              <FileName>stp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\small_text_protocol\stp.c</FilePath>
             </File>
           </Files>
         </Group>

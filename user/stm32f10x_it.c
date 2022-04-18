@@ -32,8 +32,11 @@
 #include "task.h" 
 #include "queue.h"
 #include "semphr.h"	
-#include "bsp_usart.h"
-#include "bsp_dht11.h"
+
+
+#include "small_text_protocol/stp.h"
+#include "./usart/bsp_usart.h"
+#include "./dht11/bsp_dht11.h"
 
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -328,10 +331,19 @@ void  TIM6_IRQHandler (void)
 
 
 
+void USART3_IRQHandler(void)
+{
+	 uint8_t ucTemp;
+	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_RXNE)!=RESET)
+	{		
+		ucTemp = USART_ReceiveData(DEBUG_USARTx);
+    //USART_SendData(DEBUG_USARTx,ucTemp);    
+		
+		stp_state_machine(&stp_frame_test,ucTemp);
 
+	}	 
 
-
-
+}
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

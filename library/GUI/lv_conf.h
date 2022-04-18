@@ -105,7 +105,7 @@
 #define LV_IMG_CACHE_DEF_SIZE       0
 
 /*Maximum buffer size to allocate for rotation. Only used if software rotation is enabled in the display driver.*/
-#define LV_DISP_ROT_MAX_BUF         (1*1024)
+#define LV_DISP_ROT_MAX_BUF         (10*1024)
 /*-------------
  * GPU
  *-----------*/
@@ -262,7 +262,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 /*Montserrat fonts with ASCII range and some symbols using bpp = 4
  *https://fonts.google.com/specimen/Montserrat*/
-#define LV_FONT_MONTSERRAT_8     1
+#define LV_FONT_MONTSERRAT_8     0
 #define LV_FONT_MONTSERRAT_10    0
 #define LV_FONT_MONTSERRAT_12    0
 #define LV_FONT_MONTSERRAT_14    1

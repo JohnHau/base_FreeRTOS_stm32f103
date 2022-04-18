@@ -206,6 +206,29 @@ void Usart_SendHalfWord( USART_TypeDef * pUSARTx, uint16_t ch)
 	while (USART_GetFlagStatus(pUSARTx, USART_FLAG_TXE) == RESET);	
 }
 
+
+
+void uart_write( USART_TypeDef * pUSARTx, uint8_t *array, uint16_t num)
+{
+  uint16_t i;
+	
+	for(i=0; i<num; i++)
+  {
+	    /* ?????????USART */
+	    Usart_SendByte(pUSARTx,array[i]);	
+  
+  }
+	/* ?????? */
+	while(USART_GetFlagStatus(pUSARTx,USART_FLAG_TC)==RESET);
+}
+
+
+
+
+
+
+
+
 ///重定向c库函数printf到串口，重定向后可使用printf函数
 int fputc(int ch, FILE *f)
 {
