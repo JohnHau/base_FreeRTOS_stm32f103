@@ -7,6 +7,10 @@
 #include "bsp_dht11.h"
 #include "bsp_usart.h"
 
+
+DHT11_Data_TypeDef DHT11_Data;
+
+
 QueueHandle_t uart1_Queue =NULL;
 
 static void                           DHT11_GPIO_Config                       ( void );
@@ -307,113 +311,96 @@ portENABLE_INTERRUPTS();
 	}
 }
 
-void DHT11_Task(void *para)
+
+
+
+
+uint8_t reverse_string(uint8_t* str)
 {
-	
-  
-	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
-	uint32_t r_queue;	/* 定义一个接收消息的变量 */
-	DHT11_Data_TypeDef DHT11_Data;
-	DHT11_Init ();
-  BASIC_TIM_Init();
-	printf("DHT11 tatsk\r\n");
-	
-	
-	
-#if 0	
-		/* 创建Test_Queue */
-  uart1_Queue = xQueueCreate((UBaseType_t ) QUEUE_LEN,/* 消息队列的长度 */
-                            (UBaseType_t ) QUEUE_SIZE);/* 消息的大小 */
-  if(NULL != uart1_Queue)
-    printf("创建uart1_Queue消息队列成功!\r\n");
-#endif
 
-
-
-
-	
-	while(1)
-	{	
-#if 0
-		 
-		//xReturn = xQueueReceive( uart1_Queue,&r_queue,0);
-		xReturn = xQueueReceive( uart1_Queue,&r_queue,portMAX_DELAY);
-	 if(pdTRUE == xReturn)
-      printf("本次接收到的数据是%d\n\n",r_queue);		
-#endif
-	 
-	 
-	 
-	 		xReturn =xSemaphoreTake(BinarySem_Handle,portMAX_DELAY);
-		
-		
-		if(xReturn == pdPASS)
-		{
-			//printf("got data\r\n");
-			
-			//printf("data is %d %d %d\r\n",buffer_rx_uart1[0],buffer_rx_uart1[1],buffer_rx_uart1[2]);
-			//printf("data is %s\r\n",buffer_rx_uart1);
-			
-			
-			#if 1
-			printf("rec is %c-%c-%c-%c-%c\r\n",buffer_rx_uart1[0],
-			                                           buffer_rx_uart1[1],
-			                                           buffer_rx_uart1[2],
-			                                           buffer_rx_uart1[3],
-			                                           buffer_rx_uart1[4]);
-			
-			//memset(buffer_rx_uart1,0, sizeof(buffer_rx_uart1));
-			#endif
-			
-
-			
-			if(strcmp("dht11",(int8_t*)buffer_rx_uart1) == 0)
-			//if(1)
-			{
-				printf("RH-CEL data begin:\r\n");
-					//portDISABLE_INTERRUPTS();
-					if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
-						{
-							
-							printf("Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
-							DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
-						}			
-						else
-						{
-							printf("Read DHT11 ERROR!\r\n");
-						}
-			
-			}
-			
-			
-			memset(buffer_rx_uart1, 0, sizeof(buffer_rx_uart1));
-		
-		}
-	 
-	 
-#if 0	 
-		
-		//portDISABLE_INTERRUPTS();
-		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
-			{
-				
-				printf("\r\n Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
-				DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
-			}			
-			else
-			{
-				printf("Read DHT11 ERROR!\r\n");
-			}
-			//portENABLE_INTERRUPTS();
-			
-#endif
-			//DHT11_delay(2000000);
-			vTaskDelay(2000);
-			
+  uint8_t i=0;
+	uint8_t temp=0;
+	uint8_t len = strlen((char*)str);
+	for(i=0;i< len/2;i++)
+	{	 
+		temp = str[i];
+		str[i] = str[len -1 -i];		
+		str[len -1 -i] = temp;
 	}
 	
 	
+	
+	return 0;
+
 }
+
+
+
+uint8_t dht11_itoa(uint8_t n,uint8_t*str,uint8_t base)
+{
+	uint8_t i=0;
+	
+	
+	
+	if(n == 0)
+	{
+	   str[0] = '0';
+	   return 0;
+	}
+	
+	
+	
+	
+	while(n)
+	{
+		str[i++] = n%base + '0';
+		n = n/base;
+
+	}
+
+	reverse_string(str);
+	
+	
+	return 0;
+
+}
+
+
+
+
+
+uint8_t dht11_to_string(DHT11_Data_TypeDef *DHT11_Data,DHT11_RT type,uint8_t* rt_str)
+{
+
+	uint8_t istr[4]={0};
+	uint8_t fstr[4]={0};
+	uint8_t vstr[8]={0};
+	
+	
+	if(type == DHT11_T)//read temperature
+	{
+		dht11_itoa(DHT11_Data->temp_int, istr,10);
+		dht11_itoa(DHT11_Data->temp_deci, fstr,10);
+	
+	}
+	else if(type == DHT11_R)//read humidity
+	{
+	
+		dht11_itoa(DHT11_Data->humi_int, istr,10);
+		dht11_itoa(DHT11_Data->humi_int, fstr,10);
+		
+	}
+
+
+	strcat((char*)vstr,(char*)istr);
+	strcat((char*)vstr,".");
+	strcat((char*)vstr,(char*)fstr);	
+	strcpy((char*)rt_str,(char*)vstr);
+	
+	
+	return 0;
+}
+
 
 
 /*************************************END OF FILE******************************/

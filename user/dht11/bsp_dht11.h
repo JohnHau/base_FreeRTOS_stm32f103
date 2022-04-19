@@ -35,6 +35,13 @@
 
 
 
+typedef enum _dht11_rt
+{
+
+  DHT11_R=0,
+	DHT11_T,
+
+}DHT11_RT;
 
 
 
@@ -70,6 +77,21 @@ typedef struct
 
 
 
+
+
+
+
+extern DHT11_Data_TypeDef DHT11_Data;
+
+
+
+
+
+
+
+
+
+
 /************************** DHT11 º¯ÊýÉùÃ÷ ********************************/
 void                     DHT11_Init                      ( void );
 uint8_t                  DHT11_Read_TempAndHumidity      ( DHT11_Data_TypeDef * DHT11_Data );
@@ -81,7 +103,17 @@ extern void Delay_us(uint32_t nTime);
 extern void BASIC_TIM_Init(void);
 
 
+extern uint8_t dht11_to_string(DHT11_Data_TypeDef *DHT11_Data,DHT11_RT type,uint8_t* rt_str);
+
+
 extern QueueHandle_t uart1_Queue;
+
+
+
+
+
+
+
 
 #endif /* __DHT11_H */
 

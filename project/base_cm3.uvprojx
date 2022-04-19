@@ -607,6 +607,16 @@
               <FileType>1</FileType>
               <FilePath>..\user\small_text_protocol\stp.c</FilePath>
             </File>
+            <File>
+              <FileName>gui_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\GUI_APP\gui_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>sensors_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\sensors_APP\sensors_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

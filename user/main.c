@@ -10,17 +10,17 @@
 #include "bsp_dht11.h"
 
 #include "small_text_protocol/stp.h"
-#include "./CRC16/CRC16.h"
-#include "./flash/bsp_spi_flash.h"
-#include "./i2c/bsp_i2c_ee.h"
+#include "CRC16/CRC16.h"
+#include "flash/bsp_spi_flash.h"
+#include "i2c/bsp_i2c_ee.h"
 #include "../library/GUI/lvgl/lvgl.h"
 #include "../library/GUI/lv_port_disp.h"
 #include "../library/GUI/lv_port_indev.h"
 
 
 
-
-
+#include "GUI_APP/gui_app.h"
+#include "sensors_APP/sensors_app.h"
 
 
 
@@ -53,6 +53,13 @@ void SysTick_Init(void)
 static TaskHandle_t LED1_Task_Handle = NULL;
 static TaskHandle_t LED2_Task_Handle = NULL;
 static TaskHandle_t DHT11_Task_Handle = NULL;
+static TaskHandle_t OLED_thread_Handle = NULL;
+
+static TaskHandle_t sensors_thread_Handle = NULL;
+
+
+
+
 
 
 static TaskHandle_t stp_Task_Handle = NULL;
@@ -109,7 +116,7 @@ int main ( void )
 	char *ppp = NULL;
 	BaseType_t xReturn =pdPASS;
 	
-	//DHT11_Data_TypeDef DHT11_Data;
+
 	DHT11_Init ();
 	BASIC_TIM_Init();
 	
@@ -221,66 +228,61 @@ int main ( void )
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	#if 0
-	while(1)
-	{
-		//portDISABLE_INTERRUPTS();
-		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
-			{
-				printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
-				DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
-			}			
-			else
-			{
-				printf("Read DHT11 ERROR!\r\n");
-			}
-			//portENABLE_INTERRUPTS();
-			
-			//vTaskDelay(1000);
-			DHT11_delay_2us(600000);
-
-	}
-	#endif
-	
-	
 	#if 1
 	xReturn = xTaskCreate((TaskFunction_t)LED1_Task,
 	                      (const char*)"LED1_Task",
 		                    (uint16_t)512,
 	                      (void*)NULL,
 		                    (UBaseType_t)2,
-	                      (TaskHandle_t*)&LED1_Task_Handle);
-
-	xReturn = xTaskCreate((TaskFunction_t)LED2_Task,
-	                      (const char*)"LED2_Task",
-												(uint16_t)512,
-												(void*)NULL,
-												(UBaseType_t)2,
 												(TaskHandle_t*)&LED1_Task_Handle);
+
 												
 												
 												
 												
-	xReturn = xTaskCreate((TaskFunction_t)stp_thread,
-	                      (const char*)"stp_thread",
+												
+	//xReturn = xTaskCreate((TaskFunction_t)LED2_Task,
+	 //                     (const char*)"LED2_Task",
+	//											(uint16_t)512,
+	//											(void*)NULL,
+	//											(UBaseType_t)2,
+	//											(TaskHandle_t*)&LED1_Task_Handle);
+												
+												
+					
+
+
+												
+												
+//	xReturn = xTaskCreate((TaskFunction_t)stp_thread,
+//	                      (const char*)"stp_thread",
+//												(uint16_t)512,
+//												(void*)NULL,
+//												(UBaseType_t)2,
+//												(TaskHandle_t*)&stp_Task_Handle);											
+												
+												
+												
+					
+
+
+	xReturn = xTaskCreate((TaskFunction_t)OLED_thread,
+	                      (const char*)"OLED_thread",
 												(uint16_t)512,
 												(void*)NULL,
 												(UBaseType_t)2,
-												(TaskHandle_t*)&stp_Task_Handle);											
+												(TaskHandle_t*)&OLED_thread_Handle);
+
+
+
 												
+												
+xReturn = xTaskCreate((TaskFunction_t)sensors_thread,
+	                      (const char*)"sensors_thread",
+												(uint16_t)512,
+												(void*)NULL,
+												(UBaseType_t)2,
+												(TaskHandle_t*)&sensors_thread_Handle);										
 												
 												
 												
@@ -290,19 +292,6 @@ int main ( void )
 
 												
 												
-												
-												
-												
-												
-												
-#if 0										
-  xReturn = xTaskCreate((TaskFunction_t)DHT11_Task,
-	                      (const char*)"DHT_Task",
-												(uint16_t)512,
-												(void*)NULL,
-												(UBaseType_t)3,
-												(TaskHandle_t*)&DHT11_Task_Handle);
-#endif		
 
 												
 	vTaskStartScheduler();
