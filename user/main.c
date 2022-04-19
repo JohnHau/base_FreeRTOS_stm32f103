@@ -123,6 +123,7 @@ int main ( void )
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 	LED_GPIO_Config();
+	EXTI_Key_Config();
 	//SysTick_Init();
 	USART_Config();
 	
@@ -145,8 +146,8 @@ int main ( void )
 	
 	lv_init();
 	lv_port_disp_init();
-	//lv_port_indev_init();
-	
+	lv_port_indev_init();
+
 	
 	//lv_obj_get_disp(const lv_obj_t * obj)
 	//lv_theme_mono_init(lv_disp_t * disp, bool dark_bg, const lv_font_t * font);

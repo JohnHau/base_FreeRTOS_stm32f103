@@ -12,32 +12,169 @@
 #include "../library/GUI/lvgl/lvgl.h"
 
 
+ 
+ static lv_style_t style_btn;
+ static lv_style_t style_lbl;
+ 
+ 
+ lv_obj_t * lbl = NULL;
+ lv_obj_t * lbl_01 = NULL;
+ lv_obj_t * lbl_02 = NULL;
+ lv_obj_t * lbl_03 = NULL;
+ 
+ 
+ lv_obj_t* screen_00 = NULL;
+ lv_obj_t* screen_01 = NULL;
+ lv_obj_t* screen_02 = NULL;
+ 
 
 
-
-
+lv_obj_t * btn = NULL;
+lv_obj_t *label =NULL;
 
  static void btn_event_cb(lv_event_t * e)
  {
 
      lv_event_code_t code = lv_event_get_code(e);
-     lv_obj_t *btn = lv_event_get_target(e);
-     if(code == LV_EVENT_CLICKED)
-     {
-         static uint8_t cnt =0;
-         cnt ++;
+     lv_obj_t *bbtn = lv_event_get_target(e);
 
-         lv_obj_t *label = lv_obj_get_child(btn,0);
-         lv_label_set_text_fmt(label,"Button: %d",cnt);
+	// printf("btn_event_cb\r\n");
+	 
+	 
+  //   if(code == LV_EVENT_CLICKED)
+	// printf("code is %d\r\n",(uint8_t)code);
+	 
+	 
+	 //uint32_t mk = lv_indev_get_key(lv_indev_get_act());
+	 
+	 //printf("mk is %d\r\n",mk);
+	 
+	 
+	 
+	 
+	 
+	 if(bbtn == btn)
+	 {
+	 
+			// if(code == LV_EVENT_KEY)
+			 if(code == LV_EVENT_PRESSED)
+				//	if(code == LV_EVENT_RELEASED)
+				 {
+						 static uint8_t cnt = 50;
+						 
 
-     }
+					 
+					 
+					 
+					  uint32_t mk = lv_indev_get_key(lv_indev_get_act());
+	 
+	          printf("================mk is %d ====================\r\n",mk);
+					 
+					 
+					 if(mk == LV_KEY_PREV)
+					 {
+					    cnt --;
+					 }
+					 else if(mk == LV_KEY_NEXT) 
+					 {
+					    cnt ++;
+					 }
+					 
+						 lv_obj_t *label = lv_obj_get_child(btn,0);
+						 lv_label_set_text_fmt(label,"B%d",cnt);
+
+				 }
+				 
+		 
+		 
+		 
+	 }
+		 
+		 
+		 
+		 
+ }
+ 
+ 
+
+ 
+extern lv_indev_t * indev_keypad;
+ 
+ void lv_btest(void)
+ {
+     
+	 // lv_style_reset(&style_btn);
+	 // lv_style_init(&style_btn);
+	 
+	 
+	 // lv_style_reset(&style_lbl);
+	 // lv_style_init(&style_lbl);
+	 
+	 
+	 
+//===============================
+#if 1
+	 
+	     /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
+     *add objects to the group with `lv_group_add_obj(group, obj)`
+     *and assign this input device to group to navigate in it:
+     *`lv_indev_set_group(indev_keypad, group);`*/
+	 
+
+	 
+	 
+	 lv_style_set_border_width(&style_btn,2);
+	  
+	 btn = lv_btn_create(lv_scr_act());
+	
+   
+	 //lv_obj_add_style(btn,&style_btn,LV_STATE_DISABLED);
+	 lv_obj_add_style(btn,&style_btn,LV_STATE_DEFAULT);
+	 
+	 
+   lv_obj_set_pos(btn,10,10);
+   lv_obj_set_size(btn,60,20);
+
+   
+
+  // lv_group_t * g = lv_group_get_default();
+	 lv_group_t * g = lv_group_create();/////////////////////////
+	 //lv_group_set_default(g);
+	 lv_indev_set_group(indev_keypad, g);
+	 lv_group_add_obj(g, btn);
+	 
+   lv_obj_add_event_cb(btn,btn_event_cb,LV_EVENT_ALL,NULL);
+
+ 
+ 
+     label = lv_label_create(btn);
+
+	   lv_label_set_text_static(label,"Btn");
+     lv_obj_center(label);
+
+
+#endif
+//==================================
+
+		 	 	 
  }
  
  
  
- static lv_style_t style_btn;
- static lv_style_t style_lbl;
- lv_obj_t * lbl = NULL;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ //===========================================
+ 
+ 
  void lv_wtest(void)
  {
      
@@ -83,7 +220,7 @@
 	 
 	 
      lv_obj_set_pos(btn,10,10);
-     lv_obj_set_size(btn,80,20);
+     lv_obj_set_size(btn,40,20);
 
      //lv_obj_add_event_cb(btn,btn_event_cb,LV_EVENT_ALL,NULL);
 
@@ -97,10 +234,24 @@
 //================================================================
 
 lv_style_set_border_width(&style_lbl,2);
-lbl = lv_label_create(lv_scr_act());
 
+  screen_00 = lv_scr_act();
+	
+	screen_01 = lv_obj_create(NULL);
+	
+	screen_02 = lv_obj_create(NULL);
+	
+	
+  lbl = lv_label_create(screen_00);
   lv_obj_set_pos(lbl,10,10);
-     lv_obj_set_size(lbl,40,20);
+  lv_obj_set_size(lbl,40,20);
+		 
+	lbl_01 = lv_label_create(lv_scr_act());
+  lv_obj_set_pos(lbl_01,10,30);
+  lv_obj_set_size(lbl_01,40,20);	 
+		 
+		 
+		 
 
 //void lv_style_set_text_color(lv_style_t * style, lv_color_t value);
 lv_color_t tcolor;
@@ -135,9 +286,87 @@ lv_obj_add_style(lbl,&style_lbl,LV_STATE_DEFAULT);
 //lv_label_set_text(lbl,"Label987654321");
    //  lv_obj_center(lbl);
 		 
+		 	 
+		 my_screen_01();
+		 
+		 	 	 
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  void my_screen_01(void)
+ {
+     
+	  lv_style_reset(&style_btn);
+	  lv_style_init(&style_btn);
+	 
+	 
+	  lv_style_reset(&style_lbl);
+	  lv_style_init(&style_lbl);
+	 
+	 
+	
+
+   lv_style_set_border_width(&style_lbl,2);
+
+
+  lbl_02 = lv_label_create(screen_01);
+  lv_obj_set_pos(lbl_02,10,10);
+  lv_obj_set_size(lbl_02,40,20);
+		 
+	lbl_03 = lv_label_create(screen_01);
+  lv_obj_set_pos(lbl_03,10,30);
+  lv_obj_set_size(lbl_03,40,20);	 
+		 
+		 
+
+
+//lv_label_set_long_mode(lbl,LV_LABEL_LONG_SCROLL);
+
+
+//lv_style_set_bg_opa(&style_lbl, LV_OPA_100);
+
+
+//lv_style_set_bg_color(&style_lbl, lv_color_black());
+
+//lv_style_set_text_color(&style_lbl, lv_color_white());
+
+lv_obj_add_style(lbl,&style_lbl,LV_STATE_DEFAULT);
+
+
+
+
+lv_label_set_text_static(lbl_02,"321");
+lv_label_set_text_static(lbl_03,"987");
+//lv_label_set_text(lbl,"Label987654321");
+   //  lv_obj_center(lbl);
+		 
 		 
 		 
  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  void lv_mytest(void)
  {
@@ -154,20 +383,14 @@ uint8_t dht11_str[16]={0};
 
 
 
-
-
-
-
-
-
 #if 1
 void OLED_thread(void *para)
 {
   BaseType_t xReturn =pdPASS;
 	
 	
-	lv_wtest();
-	
+	//lv_wtest();
+	lv_btest();
 	
 	while(1)
 	{
@@ -188,13 +411,18 @@ void OLED_thread(void *para)
 #if 1
 		
 		
+		//uint32_t mk = lv_indev_get_key(lv_indev_get_act());
+	  //printf("\r\nmk is %d\r\n",mk);
 		
-	
+		
+		
+		
+		
 		//printf("\r\noled thread\r\n");
 			
 
-		vTaskDelay(20);		
-		lv_tick_inc(20);
+		//vTaskDelay(1);		
+		lv_tick_inc(1);
 		lv_task_handler();
 		
 		

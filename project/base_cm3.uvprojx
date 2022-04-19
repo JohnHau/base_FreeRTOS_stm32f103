@@ -1292,6 +1292,11 @@
               <FileType>1</FileType>
               <FilePath>..\library\GUI\lv_port_indev.c</FilePath>
             </File>
+            <File>
+              <FileName>warning_mark.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\library\GUI\lvgl\src\font\warning_mark.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

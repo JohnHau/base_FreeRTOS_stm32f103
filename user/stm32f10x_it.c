@@ -33,10 +33,10 @@
 #include "queue.h"
 #include "semphr.h"	
 
-
+#include "./dht11/bsp_dht11.h"
 #include "small_text_protocol/stp.h"
 #include "./usart/bsp_usart.h"
-#include "./dht11/bsp_dht11.h"
+#include "./led/bsp_led.h"
 
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -344,6 +344,54 @@ void USART3_IRQHandler(void)
 	}	 
 
 }
+
+
+
+
+
+
+
+
+void KEY1_IRQHandler(void)
+{
+  //确保是否产生了EXTI Line中断
+	if(EXTI_GetITStatus(KEY1_INT_EXTI_LINE) != RESET) 
+	{
+		// LED1 取反		
+		//LED1_TOGGLE;
+    //清除中断标志位
+		
+		printf("key1\r\n");
+		EXTI_ClearITPendingBit(KEY1_INT_EXTI_LINE);     
+	}  
+}
+
+void KEY2_IRQHandler(void)
+{
+  //确保是否产生了EXTI Line中断
+	if(EXTI_GetITStatus(KEY2_INT_EXTI_LINE) != RESET) 
+	{
+		// LED2 取反		
+		//LED2_TOGGLE;
+    //清除中断标志位
+		printf("key2\r\n");
+		EXTI_ClearITPendingBit(KEY2_INT_EXTI_LINE);     
+	}  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None

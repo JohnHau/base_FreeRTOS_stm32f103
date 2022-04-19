@@ -10,9 +10,11 @@
 extern lv_obj_t * lbl;
 
 
+extern lv_obj_t* screen_00;
+extern lv_obj_t* screen_01;
+extern lv_obj_t* screen_02;
 
-
-
+ void my_screen_01(void);
 
 
 

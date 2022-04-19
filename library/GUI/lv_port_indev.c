@@ -9,8 +9,12 @@
 /*********************
  *      INCLUDES
  *********************/
+#include <stdio.h>
 #include "lv_port_indev.h"
 #include "./lvgl/lvgl.h"
+#include "stm32f10x.h"
+#include "led/bsp_led.h"   
+
 
 /*********************
  *      DEFINES
@@ -86,7 +90,7 @@ void lv_port_indev_init(void)
     /*------------------
      * Touchpad
      * -----------------*/
-
+#if 0
     /*Initialize your touchpad if you have*/
     touchpad_init();
 
@@ -95,7 +99,7 @@ void lv_port_indev_init(void)
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = touchpad_read;
     indev_touchpad = lv_indev_drv_register(&indev_drv);
-
+#endif
     /*------------------
      * Mouse
      * -----------------*/
@@ -124,7 +128,7 @@ void lv_port_indev_init(void)
     /*------------------
      * Keypad
      * -----------------*/
-#if 0
+#if 1
     /*Initialize your keypad or keyboard if you have*/
     keypad_init();
 
@@ -138,6 +142,20 @@ void lv_port_indev_init(void)
      *add objects to the group with `lv_group_add_obj(group, obj)`
      *and assign this input device to group to navigate in it:
      *`lv_indev_set_group(indev_keypad, group);`*/
+		 
+		 
+		 
+		 
+		 
+		// static lv_point_t points_btn[3] = {
+		//	 12,12,
+		//	 127,63,
+		//	 127,63
+		// };
+		 
+		 //lv_indev_set_button_points(indev_keypad,points_btn);
+		// lv_indev_enable(indev_keypad, true);
+		 
 #endif
 
 
@@ -345,6 +363,7 @@ static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y)
 
     (*x) = 0;
     (*y) = 0;
+	
 }
 
 /*------------------
@@ -363,7 +382,7 @@ static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
     static uint32_t last_key = 0;
 
     /*Get the current x and y coordinates*/
-    mouse_get_xy(&data->point.x, &data->point.y);
+    //mouse_get_xy(&data->point.x, &data->point.y);
 
     /*Get whether the a key is pressed and save the pressed key*/
     uint32_t act_key = keypad_get_key();
@@ -374,6 +393,7 @@ static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
         switch(act_key) {
         case 1:
             act_key = LV_KEY_NEXT;
+				    //lv_event_send(struct _lv_obj_t * obj, lv_event_code_t event_code, void * param);
             break;
         case 2:
             act_key = LV_KEY_PREV;
@@ -402,6 +422,26 @@ static uint32_t keypad_get_key(void)
 {
     /*Your code comes here*/
 
+	
+	uint32_t key =0;
+	key = GPIO_ReadInputDataBit(KEY1_INT_GPIO_PORT, KEY1_INT_GPIO_PIN);
+	
+	if(key)
+	{
+		
+		//printf("key1 key1\n");
+		return 1;
+	}
+	
+	key =0;
+	key = GPIO_ReadInputDataBit(KEY2_INT_GPIO_PORT, KEY2_INT_GPIO_PIN);
+	
+	if(key)
+	{
+	   
+		//printf("key2 key2\n");
+		return 2;
+	}
     return 0;
 }
 

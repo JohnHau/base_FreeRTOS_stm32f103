@@ -15,12 +15,12 @@
 
 #include "../library/GUI/lvgl/lvgl.h"
 
-
+LV_FONT_DECLARE(warning_mark);
 
 static uint8_t dht11_str[16]={0};
 
 
-
+static uint8_t scnt =0;
 void sensors_thread(void *para)
 {
 	
@@ -94,7 +94,7 @@ void sensors_thread(void *para)
 			
 			
 			vTaskDelay(2000);
-			
+			scnt++;
 			if(DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
 			{
 				printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
@@ -103,17 +103,44 @@ void sensors_thread(void *para)
 				
 				
 				
-				
+				#define zhong "\xE4\xB8\xAD"
+				#define guo "\xE5\x98\xBD"
 				dht11_to_string(&DHT11_Data,DHT11_T,dht11_str);
 				
 				printf("\r\n now T is %s\r\n",(char*)dht11_str);
 				
 				//lv_label_set_text_fmt(lbl, "%d",DHT11_Data.temp_int);
-				lv_label_set_text_fmt(lbl, "%s",dht11_str);
+				//lv_label_set_text_fmt(lbl, "%s℃",dht11_str);
+				//lv_label_set_text_fmt(lbl, "%s",zhong guo);
 				
-				
-				
+				//lv_label_set_text(lbl,LV_SYMBOL_AUDIO);
+				//lv_label_set_text(lbl,"\xE2\x84\x83");
 				//lv_label_set_text_fmt(lbl, "%d",26);
+				
+				//lv_label_set_text(lbl,"\xC2\xB0""C");
+				
+				if(lv_scr_act() == screen_00)
+				{
+				   lv_label_set_text(lbl,"\xEF\x81\xB1");
+									
+				}
+				
+				
+				if(scnt %4 ==0)
+				{
+				
+				   lv_scr_load(screen_01);
+				
+				}
+				else
+				{
+				
+				   lv_scr_load(screen_00);
+				}
+				
+				
+				
+				
 			}			
 			else
 			{
