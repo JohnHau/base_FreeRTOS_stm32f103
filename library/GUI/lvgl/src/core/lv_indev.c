@@ -500,8 +500,8 @@ static void indev_keypad_proc(lv_indev_t * i, lv_indev_data_t * data)
 							
 							
 							//===========================
-							printf("elaps is %d\r\n",lv_tick_elaps(i->proc.pr_timestamp));
-							printf("long press time is %d\r\n",i->driver->long_press_time);
+							//printf("elaps is %d\r\n",lv_tick_elaps(i->proc.pr_timestamp));
+							//printf("long press time is %d\r\n",i->driver->long_press_time);
 							//===========================
                 lv_event_send(indev_obj_act, LV_EVENT_LONG_PRESSED, indev_act);
                 if(indev_reset_check(&i->proc)) return;

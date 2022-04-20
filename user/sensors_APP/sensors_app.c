@@ -119,26 +119,42 @@ void sensors_thread(void *para)
 				
 				//lv_label_set_text(lbl,"\xC2\xB0""C");
 				
+				//lv_label_set_text_fmt(lbl_T, "%s\xC2\xB0""C",dht11_str);
+				
+				lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
+				
+				memset(dht11_str,0,sizeof(dht11_str));
+				dht11_to_string(&DHT11_Data,DHT11_R,dht11_str);
+				lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
+				
+				
+				#if 0
 				if(lv_scr_act() == screen_00)
 				{
 				   lv_label_set_text(lbl,"\xEF\x81\xB1");
 									
 				}
+				#endif
 				
+				
+				#if 1
 				
 				if(scnt %4 ==0)
 				{
 				
-				   lv_scr_load(screen_01);
+				   //lv_scr_load(screen_01);
+					
+					//lv_scr_load(scr_info);
 				
 				}
 				else
 				{
 				
-				   lv_scr_load(screen_00);
+				   //lv_scr_load(screen_00);
+					//lv_scr_load(scr_rt);
 				}
 				
-				
+				#endif
 				
 				
 			}			

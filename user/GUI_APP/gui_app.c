@@ -23,11 +23,18 @@
  lv_obj_t * lbl_03 = NULL;
  
  
+ lv_obj_t * lbl_R = NULL;
+ lv_obj_t * lbl_T = NULL;
+ lv_obj_t * lbl_info = NULL;
+ 
+ 
+ 
  lv_obj_t* screen_00 = NULL;
  lv_obj_t* screen_01 = NULL;
  lv_obj_t* screen_02 = NULL;
  
-
+ lv_obj_t* scr_rt = NULL;
+ lv_obj_t* scr_info = NULL;
 
 lv_obj_t * btn = NULL;
 lv_obj_t *label =NULL;
@@ -63,14 +70,10 @@ lv_obj_t *label =NULL;
 				//  if(code == LV_EVENT_LONG_PRESSED_REPEAT)
 				 {
 						 static uint8_t cnt = 50;
-						 
-
-					 
-					 
-					 
+						 				 				 
 					  uint32_t mk = lv_indev_get_key(lv_indev_get_act());
 	 
-	          printf("================mk is %d ====================\r\n",mk);
+	         // printf("================mk is %d ====================\r\n",mk);
 					 
 					 
 					 if(mk == LV_KEY_PREV)
@@ -367,12 +370,150 @@ lv_label_set_text_static(lbl_03,"987");
  
  
  
+ static void lbl_T_event_cb(lv_event_t * e)
+ {
+
+     lv_event_code_t code = lv_event_get_code(e);
+     lv_obj_t *llbl_T = lv_event_get_target(e);
+
+	// printf("btn_event_cb\r\n");
+	 
+	 
+  //   if(code == LV_EVENT_CLICKED)
+	// printf("code is %d\r\n",(uint8_t)code);
+	 
+	 
+	 //uint32_t mk = lv_indev_get_key(lv_indev_get_act());
+	 
+	 //printf("mk is %d\r\n",mk);
+	 
+	 
+	 
+	 
+	 
+	 if(llbl_T == lbl_T)
+	 {
+	 
+			// if(code == LV_EVENT_KEY)
+			 if(code == LV_EVENT_PRESSED)
+				//	if(code == LV_EVENT_RELEASED)
+			 //if(code == LV_EVENT_LONG_PRESSED)
+				//  if(code == LV_EVENT_LONG_PRESSED_REPEAT)
+				 {
+						 static uint8_t cnt = 50;
+						 				 				 
+					  uint32_t mk = lv_indev_get_key(lv_indev_get_act());
+	 
+	         // printf("================mk is %d ====================\r\n",mk);
+					 
+					 
+					 if(mk == LV_KEY_PREV)
+					 {
+					    cnt --;
+					 }
+					 else if(mk == LV_KEY_NEXT) 
+					 {
+					    cnt ++;
+					 }
+					 else if(mk == LV_KEY_ENTER) 
+					 {
+					 
+					    cnt =0;
+					 }
+					 else if(mk == LV_USR_KEY_UP) 
+					 {
+					    cnt ++;
+					 }
+						 //lv_obj_t *label = lv_obj_get_child(btn,0);
+						 //lv_label_set_text_fmt(label,"B%d",cnt);
+					 
+					 printf("lbl callback %d\r\n",cnt);
+					 lv_scr_load(scr_info);
+		
+					 
+
+				 }
+				 
+		 
+		 
+		 
+	 }
+		 
+		 
+		 
+		 
+ }
+  void screen_INFO(void);
+ 
+ void screen_RT(void)
+ {
+  
+	  lv_style_reset(&style_lbl);
+	  lv_style_init(&style_lbl);
+	 
+    lv_style_set_border_width(&style_lbl,2);
+
+    scr_rt = lv_scr_act();
+			 
+	  lbl_T = lv_label_create(scr_rt);
+    lv_obj_set_pos(lbl_T,0,0);
+    lv_obj_set_size(lbl_T,60,20);	 
+		 
+	  lbl_R = lv_label_create(scr_rt);
+    lv_obj_set_pos(lbl_R,0,30);
+    lv_obj_set_size(lbl_R,70,20);
+
+	 
+	 
+	 
+	 
+	   // lv_group_t * g = lv_group_get_default();
+	 lv_group_t * g = lv_group_create();/////////////////////////
+	 //lv_group_set_default(g);
+	 lv_indev_set_group(indev_keypad, g);
+	 lv_group_add_obj(g, lbl_T);
+	 
+	 lv_obj_add_event_cb(lbl_T,lbl_T_event_cb,LV_EVENT_ALL,NULL);
+	 
+	 
+   lv_obj_add_style(lbl_R,&style_lbl,LV_STATE_DEFAULT);
+   lv_obj_add_style(lbl_T,&style_lbl,LV_STATE_DEFAULT);
+	 
+	 
+	 
+	  screen_INFO();
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+ }
  
  
- 
- 
- 
- 
+ void screen_INFO(void)
+ {
+  
+	  lv_style_reset(&style_lbl);
+	  lv_style_init(&style_lbl);
+	 
+    lv_style_set_border_width(&style_lbl,2);
+
+    scr_info = lv_obj_create(NULL);
+			 
+	  lbl_info = lv_label_create(scr_info);
+    lv_obj_set_pos(lbl_info,0,0);
+    lv_obj_set_size(lbl_info,100,20);	 
+		 
+
+    lv_obj_add_style(lbl_info,&style_lbl,LV_STATE_DEFAULT);
+	 
+	 lv_obj_add_style(lbl_info,&style_lbl,LV_STATE_DEFAULT);
+	 lv_label_set_text(lbl_info,"info:dth11 routine");
+ }
  
  
  
@@ -397,10 +538,12 @@ uint8_t dht11_str[16]={0};
 void OLED_thread(void *para)
 {
   BaseType_t xReturn =pdPASS;
-	
+	static uint32_t cnt =1;
 	
 	//lv_wtest();
-	lv_btest();
+	//lv_btest();
+	
+	screen_RT();
 	
 	while(1)
 	{
@@ -418,16 +561,11 @@ void OLED_thread(void *para)
 		#endif
 		
 		
-#if 1
-		
+#if 1		
 		
 		//uint32_t mk = lv_indev_get_key(lv_indev_get_act());
 	  //printf("\r\nmk is %d\r\n",mk);
-		
-		
-		
-		
-		
+			
 		//printf("\r\noled thread\r\n");
 			
 
@@ -437,6 +575,17 @@ void OLED_thread(void *para)
 		
 		
 		
+		if(lv_scr_act() == scr_info)
+		{
+		  cnt ++;
+			//printf("\r\nswitch cnt %dr\n",cnt);
+			if(cnt %5000 ==0)
+			{
+					lv_scr_load(scr_rt);
+				  cnt =1;
+			}
+			
+		}
 		
 		
 #endif

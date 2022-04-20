@@ -387,7 +387,7 @@ uint8_t dht11_to_string(DHT11_Data_TypeDef *DHT11_Data,DHT11_RT type,uint8_t* rt
 	{
 	
 		dht11_itoa(DHT11_Data->humi_int, istr,10);
-		dht11_itoa(DHT11_Data->humi_int, fstr,10);
+		dht11_itoa(DHT11_Data->humi_deci, fstr,10);
 		
 	}
 

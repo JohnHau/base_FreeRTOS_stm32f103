@@ -242,6 +242,25 @@ cmd_fail: /* 命令执行失败后，切记发送停止信号，避免影响I2C总线上其他设备 */
 }
 
 
+
+
+
+uint8_t  write_cmd_ssd1306(uint8_t cmd)
+{
+
+   ee_WriteBytes(&cmd, 0x00, 1);
+	 return 0;
+
+}
+
+
+
+
+
+
+
+
+
 void ee_Erase(void)
 {
 	uint16_t i;
@@ -401,145 +420,35 @@ void Write_IIC_Data(unsigned char IIC_Data)
 void Initial_LY096BG30(void)
 {
 	
-	#if 0
-	Write_IIC_Command(0xAE);   //display off
-	Write_IIC_Command(0x20);	//Set Memory Addressing Mode	
-	Write_IIC_Command(0x10);	//00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
-	Write_IIC_Command(0xb0);	//Set Page Start Address for Page Addressing Mode,0-7
-	Write_IIC_Command(0xc8);	//Set COM Output Scan Direction
-	Write_IIC_Command(0x00);//---set low column address
-	Write_IIC_Command(0x10);//---set high column address
-	Write_IIC_Command(0x40);//--set start line address
-	Write_IIC_Command(0x81);//--set contrast control register
-	Write_IIC_Command(0x7f);
-	Write_IIC_Command(0xa1);//--set segment re-map 0 to 127
-	Write_IIC_Command(0xa6);//--set normal display
-	Write_IIC_Command(0xa8);//--set multiplex ratio(1 to 64)
-	Write_IIC_Command(0x3F);//
-	Write_IIC_Command(0xa4);//0xa4,Output follows RAM content;0xa5,Output ignores RAM content
-	Write_IIC_Command(0xd3);//-set display offset
-	Write_IIC_Command(0x00);//-not offset
-	Write_IIC_Command(0xd5);//--set display clock divide ratio/oscillator frequency
-	Write_IIC_Command(0xf0);//--set divide ratio
-	Write_IIC_Command(0xd9);//--set pre-charge period
-	Write_IIC_Command(0x22); //
-	Write_IIC_Command(0xda);//--set com pins hardware configuration
-	Write_IIC_Command(0x12);
-	Write_IIC_Command(0xdb);//--set vcomh
-	Write_IIC_Command(0x20);//0x20,0.77xVcc
-	Write_IIC_Command(0x8d);//--set DC-DC enable
-	Write_IIC_Command(0x14);//
-	Write_IIC_Command(0xaf);//--turn on oled panel 
-	
-	#endif
-
-	write_buf[0]=0xAE;
-	ee_WriteBytes(write_buf, 0x00, 1);
-
-	
-	#if 1
-	write_buf[0]=0x20;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	#endif
-
-
-	write_buf[0]=0x02;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xa0;//0xb0;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xc0;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x00;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0x10;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x40;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x81;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0x7f;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xa1;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xa6;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xa8;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x3f;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xa4;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0xd3;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x00;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xd5;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xf0;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0xd9;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x22;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xda;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0x12;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0xdb;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x20;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x8d;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	write_buf[0]=0x14;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	write_buf[0]=0xaf;
-	ee_WriteBytes(write_buf, 0x00, 1);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	write_cmd_ssd1306(0xAE);   //display off
+	write_cmd_ssd1306(0x20);	//Set Memory Addressing Mode	
+	write_cmd_ssd1306(0x02);//====write_cmd_ssd1306(0x10);	//00,Horizontal Addressing Mode;01,Vertical Addressing Mode;10,Page Addressing Mode (RESET);11,Invalid
+	write_cmd_ssd1306(0xa0);//====write_cmd_ssd1306(0xb0);	//Set Page Start Address for Page Addressing Mode,0-7
+	write_cmd_ssd1306(0xc0);//====write_cmd_ssd1306(0xc8);	//Set COM Output Scan Direction
+	write_cmd_ssd1306(0x00);//---set low column address
+	write_cmd_ssd1306(0x10);//---set high column address
+	write_cmd_ssd1306(0x40);//--set start line address
+	write_cmd_ssd1306(0x81);//--set contrast control register
+	write_cmd_ssd1306(0x7f);
+	write_cmd_ssd1306(0xa1);//--set segment re-map 0 to 127
+	write_cmd_ssd1306(0xa6);//--set normal display
+	write_cmd_ssd1306(0xa8);//--set multiplex ratio(1 to 64)
+	write_cmd_ssd1306(0x3F);//
+	write_cmd_ssd1306(0xa4);//0xa4,Output follows RAM content;0xa5,Output ignores RAM content
+	write_cmd_ssd1306(0xd3);//-set display offset
+	write_cmd_ssd1306(0x00);//-not offset
+	write_cmd_ssd1306(0xd5);//--set display clock divide ratio/oscillator frequency
+	write_cmd_ssd1306(0xf0);//--set divide ratio
+	write_cmd_ssd1306(0xd9);//--set pre-charge period
+	write_cmd_ssd1306(0x22); //
+	write_cmd_ssd1306(0xda);//--set com pins hardware configuration
+	write_cmd_ssd1306(0x12);
+	write_cmd_ssd1306(0xdb);//--set vcomh
+	write_cmd_ssd1306(0x20);//0x20,0.77xVcc
+	write_cmd_ssd1306(0x8d);//--set DC-DC enable
+	write_cmd_ssd1306(0x14);//
+	write_cmd_ssd1306(0xaf);//--turn on oled panel 
+		
 }
 
 
@@ -555,15 +464,17 @@ void fill_picture(unsigned char fill_Data)
 		//Write_IIC_Command(0x10);		//high column start address
 		
 		
-		write_buf[0]=0xb0+m;
-	  ee_WriteBytes(write_buf, 0x00, 1);
+		//write_buf[0]=0xb0+m;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0xb0+m);
 		
-		write_buf[0]=0x00;
-	  ee_WriteBytes(write_buf, 0x00, 1);
+		//write_buf[0]=0x00;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0x00);
 		
-		write_buf[0]=0x10;
-	  ee_WriteBytes(write_buf, 0x00, 1);
-		
+		//write_buf[0]=0x10;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0x10);
 		for(n=0;n<128;n++)
 			{
 				//Write_IIC_Data(fill_Data);
@@ -591,14 +502,19 @@ void fill_picture_x(unsigned char fill_Data)
 		//Write_IIC_Command(0x10);		//high column start address
 		
 		
-		write_buf[0]=0xb0+m;
-	  ee_WriteBytes(write_buf, 0x00, 1);
+		//write_buf[0]=0xb0+m;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0xb0+m);
 		
-		write_buf[0]=0x0f;
-	  ee_WriteBytes(write_buf, 0x00, 1);
 		
-		write_buf[0]=0x10;
-	  ee_WriteBytes(write_buf, 0x00, 1);
+		//write_buf[0]=0x0f;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0x0f);
+		
+		
+		//write_buf[0]=0x10;
+	  //ee_WriteBytes(write_buf, 0x00, 1);
+		write_cmd_ssd1306(0x10);
 		
 		for(n=0;n<12;n++)
 			{
@@ -811,7 +727,7 @@ void oled_096_print(uint8_t col, uint8_t row, int8_t*str)
 #define ST7565_VER_RES  64
 static uint8_t lcd_fb[ST7565_HOR_RES * ST7565_VER_RES / 8] = {0xAA, 0xAA};
 static uint8_t pagemap[] = { 7, 6, 5, 4, 3, 2, 1, 0 };
-//static uint8_t pagemap[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+
 
 /**********************
  *   STATIC FUNCTIONS
