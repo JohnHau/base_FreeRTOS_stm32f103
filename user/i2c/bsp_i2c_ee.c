@@ -822,11 +822,11 @@ void st7565_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color
     for(y = act_y1; y <= act_y2; y++) {
         for(x = act_x1; x <= act_x2; x++) {
             if(lv_color_to1(*color_p) != 0) {
-                //lcd_fb[x + (y / 8)*ST7565_HOR_RES] &= ~(1 << (7 - (y % 8)));
-							  lcd_fb[x + (y / 8)*ST7565_HOR_RES] |= (1 << (7 - (y % 8)));
+                lcd_fb[x + (y / 8)*ST7565_HOR_RES] &= ~(1 << (7 - (y % 8)));
+							  //lcd_fb[x + (y / 8)*ST7565_HOR_RES] |= (1 << (7 - (y % 8)));
             } else {
-                //lcd_fb[x + (y / 8)*ST7565_HOR_RES] |= (1 << (7 - (y % 8)));
-							  lcd_fb[x + (y / 8)*ST7565_HOR_RES] &= ~(1 << (7 - (y % 8)));
+                lcd_fb[x + (y / 8)*ST7565_HOR_RES] |= (1 << (7 - (y % 8)));
+							  //lcd_fb[x + (y / 8)*ST7565_HOR_RES] &= ~(1 << (7 - (y % 8)));
             }
             color_p ++;
         }

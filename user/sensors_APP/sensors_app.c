@@ -121,6 +121,10 @@ void sensors_thread(void *para)
 				
 				//lv_label_set_text_fmt(lbl_T, "%s\xC2\xB0""C",dht11_str);
 				
+				
+				
+				
+				
 				lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
 				
 				memset(dht11_str,0,sizeof(dht11_str));

@@ -143,6 +143,11 @@ int main ( void )
 	Initial_LY096BG30();
 	
 	fill_picture(0x00);
+	//fill_picture(0xff);
+	
+	//while(1);
+	
+	
 	
 	lv_init();
 	lv_port_disp_init();

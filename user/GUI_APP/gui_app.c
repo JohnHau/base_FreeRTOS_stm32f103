@@ -528,6 +528,41 @@ lv_label_set_text_static(lbl_03,"987");
  
  
 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  void screen_test(void)
+ {
+  
+	  lv_style_reset(&style_lbl);
+	  lv_style_init(&style_lbl);
+	 
+    lv_style_set_border_width(&style_lbl,2);
+
+    scr_rt = lv_scr_act();
+			 
+	  lbl_T = lv_label_create(scr_rt);
+    lv_obj_set_pos(lbl_T,0,0);
+    lv_obj_set_size(lbl_T,60,20);	 
+
+   lv_obj_add_style(lbl_T,&style_lbl,LV_STATE_DEFAULT);
+	 
+
+
+ }
+ 
+ 
+ 
 
 
 uint8_t dht11_str[16]={0};
@@ -544,6 +579,9 @@ void OLED_thread(void *para)
 	//lv_btest();
 	
 	screen_RT();
+	
+	
+	//screen_test();
 	
 	while(1)
 	{
