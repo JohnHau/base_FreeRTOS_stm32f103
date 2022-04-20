@@ -212,10 +212,6 @@ int main(int argc, char** argv)
 	stp_msg.tag[0]=0;
 	stp_msg.tag[1]=0;
 
-
-
-
-
 	if((fd = open_port(fd,1)) < 0)
 	{
 		perror("open_port error");
@@ -254,7 +250,7 @@ int main(int argc, char** argv)
 
 		if(nread >  0)
 		{
-			printf("read data is %s\n",rxbuf);
+			//printf("read data is %s\n",rxbuf);
 
 			for(uint16_t i =0;i<nread;i++)
 			{
@@ -314,12 +310,14 @@ int main(int argc, char** argv)
 					msg_buf[7 + stp_msg.payload_len] = stp_q.rbuf[stp_q.head]; 
 
 					stp_msg.crc16 = msg_buf[6 + stp_msg.payload_len]*256 + msg_buf[7 + stp_msg.payload_len];
+#if 0
 					printf("\n===== msg is \n");
 					for(int i=0;i< (8 + stp_msg.payload_len);i++)
 					{
 						printf("%2x ",msg_buf[i]);
 					}
 					printf("\n=====\n");
+#endif
 					verify_stp_frame(&stp_msg);
 
 

@@ -158,29 +158,28 @@ uint16_t verify_stp_frame(stp_frame_t *stp_frame)
 	{
 	  stp_temp[6+i] = stp_frame->payload[i];
 	}
-	
-	printf("rec is\r\n");
+#if 1	
+	printf("\r\n====rec is\r\n");
 	for(i=0;i < stp_frame->payload_len +6;i++)
 	{
-	  
 		printf("%x ",stp_temp[i]);
 	}
-	printf("\r\n");
-	
-  crc16 = cal_CRC16(stp_temp,stp_frame->payload_len + 6);
+	//printf("====\r\n");
+#endif	
+	crc16 = cal_CRC16(stp_temp,stp_frame->payload_len + 6);
 	
 	if(crc16 == stp_frame->crc16)
 	{
-	  printf("\r\n valid stp frame\r\n");
-		 return 0;
+		printf("\r\n====valid stp frame\r\n");
+		return 0;
 	}
 	else
 	{
-	  printf("\r\n invalid stp frame\r\n");
+		printf("\r\n====invalid stp frame\r\n");
 	}
-	
-	printf("crc is %x",crc16);
-	printf("fcrc is %x", stp_frame->crc16);
+
+//	printf("crc is %x",crc16);
+//	printf("fcrc is %x", stp_frame->crc16);
 	return 1;
 }
 
