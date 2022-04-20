@@ -9,8 +9,8 @@
 #include "queue.h"
 #include "semphr.h"	
 
-
-
+#include "../library/GUI/lvgl/lvgl.h"
+#include "GUI_APP/gui_app.h"
 uint8_t stp_signal =0;
 
 SemaphoreHandle_t BinarySem_stp_Handle = NULL;
@@ -20,12 +20,6 @@ SemaphoreHandle_t BinarySem_stp_Handle = NULL;
 uint8_t stp_read_signal =0;
 stp_frame_t stp_frame_test;
 uint8_t stp_frame_buf[512*2]={0};
-
-
-
-
-
-
 
 
 
@@ -142,9 +136,11 @@ stp_state_t stp_state_machine(stp_frame_t *stp_frame,uint8_t ch)
 		     payload_cnt=0;
 		     crc_cnt =0;
 		 
-				 		 
-				xSemaphoreGiveFromISR(BinarySem_stp_Handle, &xHigherPriorityTaskWoken);
-	      portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				//if(verify_stp_frame(stp_frame) == 0) 
+				{					
+					xSemaphoreGiveFromISR(BinarySem_stp_Handle, &xHigherPriorityTaskWoken);
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}
 				 
 				 
 				 stp_state = STATE_STP_TAG;
@@ -194,7 +190,10 @@ uint16_t verify_stp_frame(stp_frame_t *stp_frame)
 	
 	if(crc16 == stp_frame->crc16)
 	{
-	  //printf("\r\n valid stp frame\r\n");
+	  
+		//static uint8_t mn =1;
+		//printf("\r\n valid stp frame\r\n");
+		//lv_label_set_text_fmt(lbl_R, "%d stp",mn++);
 		return 0;
 	}
 	else
@@ -219,8 +218,8 @@ uint16_t send_stp_frame(USART_TypeDef * pUSARTx,uint8_t *payload,uint16_t payloa
 	
 	
 	 memset(stp_temp,0,512*2);
-	 stp_temp[0] = 0x34;//'S';
-	 stp_temp[1] = 0x35;//'T';
+	 stp_temp[0] = 'S';
+	 stp_temp[1] = 'T';
 	 stp_temp[2] = packet_num/256;
 	 stp_temp[3] = packet_num%256;
 	 stp_temp[4] = payload_len/256;
@@ -241,7 +240,7 @@ uint16_t send_stp_frame(USART_TypeDef * pUSARTx,uint8_t *payload,uint16_t payloa
     //printf("crc16 is %x\r\n",crc16);
 	
 	
-	  uart_write(USART1,stp_temp, payload_len + 8);
+	  uart_write(pUSARTx,stp_temp, payload_len + 8);
 	  //uart_write(USART1,mt, 5);
     //if(write(fd,stp_temp,payload_len + 8) != (payload_len + 8))
     {
@@ -307,7 +306,13 @@ while(1)
 		   if(verify_stp_frame(&stp_frame_test) == 0)
 			 {	 
 				 
-							 if(strncmp(stp_frame_test.payload,"ST WRITE START\r\n",strlen("ST WRITE START\r\n")) == 0)
+				       static uint8_t mn =1;
+		           //printf("\r\n valid stp frame\r\n");
+		           lv_label_set_text_fmt(lbl_R, "%d stp",mn++);
+				 
+				 
+				 
+							 if(strncmp((char*)stp_frame_test.payload,"ST WRITE START\r\n",strlen("ST WRITE START\r\n")) == 0)
 							 {
 									printf("st write start\r\n");
 							 }
@@ -318,7 +323,7 @@ while(1)
 							 //printf("start is %s\n",stp_frame_test.payload);
 							 
 							 
-							 if(strncmp(stp_frame_test.payload,"ST WRITE END\r\n",strlen("ST WRITE END\r\n")) == 0)
+							 if(strncmp((char*)stp_frame_test.payload,"ST WRITE END\r\n",strlen("ST WRITE END\r\n")) == 0)
 							 {
 									printf("st write end\r\n");
 							 }
@@ -329,7 +334,7 @@ while(1)
 							 
 							 
 							 
-							 if(strncmp(stp_frame_test.payload,"ST READ START\r\n",strlen("ST READ START\r\n")) == 0)
+							 if(strncmp((char*)stp_frame_test.payload,"ST READ START\r\n",strlen("ST READ START\r\n")) == 0)
 							 {
 									
 								 //send_stp_frame(USART1,"ST READ ACK\r\n",strlen("ST READ ACK\r\n"),0);
@@ -344,7 +349,7 @@ while(1)
 							 //printf("start is %s\n",stp_frame_test.payload);
 							 
 							 
-							 if(strncmp(stp_frame_test.payload,"ST READ END\r\n",strlen("ST READ END\r\n")) == 0)
+							 if(strncmp((char*)stp_frame_test.payload,"ST READ END\r\n",strlen("ST READ END\r\n")) == 0)
 							 {
 									printf("st read end\r\n");
 							 }
@@ -359,11 +364,11 @@ while(1)
 							 {
 							 
 							      //for(bblock=0;bblock < 0x8000;bblock++) 
-								 	 if(strncmp(stp_frame_test.payload,"ST READING\r\n",strlen("ST READING\r\n")) == 0)
+								 	 if(strncmp((char*)stp_frame_test.payload,"ST READING\r\n",strlen("ST READING\r\n")) == 0)
 									 {
 
 										  //printf("st reading\r\n");
-											send_stp_frame(USART1,stp_tempx,sizeof(stp_tempx),pn++);
+											send_stp_frame(USART3,stp_tempx,sizeof(stp_tempx),pn++);
 										  //send_stp_frame(USART1,stp_tempx,sizeof(stp_tempx),700);
 									 }
 								 

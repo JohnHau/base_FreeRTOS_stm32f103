@@ -58,11 +58,8 @@ static TaskHandle_t OLED_thread_Handle = NULL;
 static TaskHandle_t sensors_thread_Handle = NULL;
 
 
+static TaskHandle_t stp_thread_Handle = NULL;
 
-
-
-
-static TaskHandle_t stp_Task_Handle = NULL;
 
 typedef enum { FAILED = 0, PASSED = !FAILED} TestStatus;
 
@@ -109,7 +106,6 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 
 
 
-
 int main ( void )
 {
 	
@@ -126,6 +122,11 @@ int main ( void )
 	EXTI_Key_Config();
 	//SysTick_Init();
 	USART_Config();
+	
+	init_stp_frame(&stp_frame_test,stp_frame_buf);
+	
+	
+	
 	
 	
 
@@ -272,7 +273,7 @@ int main ( void )
 					
 
 
-	xReturn = xTaskCreate((TaskFunction_t)OLED_thread,
+xReturn = xTaskCreate((TaskFunction_t)OLED_thread,
 	                      (const char*)"OLED_thread",
 												(uint16_t)512,
 												(void*)NULL,
@@ -291,7 +292,12 @@ xReturn = xTaskCreate((TaskFunction_t)sensors_thread,
 												(TaskHandle_t*)&sensors_thread_Handle);										
 												
 												
-												
+xReturn = xTaskCreate((TaskFunction_t)stp_thread,
+	                      (const char*)"stp_thread",
+												(uint16_t)512,
+												(void*)NULL,
+												(UBaseType_t)2,
+												(TaskHandle_t*)&stp_thread_Handle);															
 											
 #endif	
 						

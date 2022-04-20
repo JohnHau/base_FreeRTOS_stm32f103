@@ -10,7 +10,7 @@
 #include "bsp_dht11.h"
 #include "GUI_APP/gui_app.h"
 
-
+#include "small_text_protocol/stp.h"
 #include "sensors_APP/sensors_app.h"
 
 #include "../library/GUI/lvgl/lvgl.h"
@@ -21,6 +21,14 @@ static uint8_t dht11_str[16]={0};
 
 
 static uint8_t scnt =0;
+
+
+uint8_t stp_tempxx[16] = {0x39,0x38,0x37,0x36,0x36,0x35,0x34,0x33,'a','b','c','d','e','f','g','h'};
+uint8_t stp_sn =0;
+
+
+
+
 void sensors_thread(void *para)
 {
 	
@@ -121,15 +129,18 @@ void sensors_thread(void *para)
 				
 				//lv_label_set_text_fmt(lbl_T, "%s\xC2\xB0""C",dht11_str);
 				
-				
-				
-				
+						
 				
 				lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
 				
 				memset(dht11_str,0,sizeof(dht11_str));
 				dht11_to_string(&DHT11_Data,DHT11_R,dht11_str);
-				lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
+				//lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
+				
+				
+				//send_stp_frame(USART3,stp_tempxx,sizeof(stp_tempxx),stp_sn++);
+				
+				
 				
 				
 				#if 0

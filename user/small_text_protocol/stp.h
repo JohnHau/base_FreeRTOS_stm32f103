@@ -75,7 +75,7 @@ extern uint16_t verify_stp_frame(stp_frame_t *stp_frame);
 extern uint32_t init_stp_frame(stp_frame_t *stp_frame,uint8_t *buf);
 
 
-
+extern uint16_t send_stp_frame(USART_TypeDef * pUSARTx,uint8_t *payload,uint16_t payload_len,uint16_t packet_num);
 
 
 extern void stp_thread(void);
