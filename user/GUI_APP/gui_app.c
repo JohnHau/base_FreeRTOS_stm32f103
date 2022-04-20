@@ -59,6 +59,8 @@ lv_obj_t *label =NULL;
 			// if(code == LV_EVENT_KEY)
 			 if(code == LV_EVENT_PRESSED)
 				//	if(code == LV_EVENT_RELEASED)
+			 //if(code == LV_EVENT_LONG_PRESSED)
+				//  if(code == LV_EVENT_LONG_PRESSED_REPEAT)
 				 {
 						 static uint8_t cnt = 50;
 						 
@@ -79,7 +81,15 @@ lv_obj_t *label =NULL;
 					 {
 					    cnt ++;
 					 }
+					 else if(mk == LV_KEY_ENTER) 
+					 {
 					 
+					    cnt =0;
+					 }
+					 else if(mk == LV_USR_KEY_UP) 
+					 {
+					    cnt ++;
+					 }
 						 lv_obj_t *label = lv_obj_get_child(btn,0);
 						 lv_label_set_text_fmt(label,"B%d",cnt);
 
@@ -421,7 +431,7 @@ void OLED_thread(void *para)
 		//printf("\r\noled thread\r\n");
 			
 
-		//vTaskDelay(1);		
+		vTaskDelay(1);		
 		lv_tick_inc(1);
 		lv_task_handler();
 		

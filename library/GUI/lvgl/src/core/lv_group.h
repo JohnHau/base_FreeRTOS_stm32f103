@@ -39,6 +39,16 @@ enum {
     LV_KEY_PREV      = 11,  /*0x0B, '*/
     LV_KEY_HOME      = 2,   /*0x02, STX*/
     LV_KEY_END       = 3,   /*0x03, ETX*/
+	
+	
+	
+	
+	  LV_USR_KEY_UP   = 145,/*0x80 + 0x11*/
+	  LV_USR_KEY_DOWN = 146,/*0x80 + 0x12*/
+	
+	
+	
+	
 };
 typedef uint8_t lv_key_t;
 

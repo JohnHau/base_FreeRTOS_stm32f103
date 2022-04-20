@@ -6,6 +6,7 @@
 /*********************
  *      INCLUDES
  ********************/
+#include<stdio.h>
 #include "lv_indev.h"
 #include "lv_disp.h"
 #include "lv_obj.h"
@@ -428,35 +429,54 @@ static void indev_keypad_proc(lv_indev_t * i, lv_indev_data_t * data)
         else if(data->key == LV_KEY_NEXT) {
             
 					
-					 //// lv_group_set_editing(g, false); /*Editing is not used by KEYPAD is be sure it is disabled*/
-           //// lv_group_focus_next(g);
-           //// if(indev_reset_check(&i->proc)) return;
-					
+					  lv_group_set_editing(g, false); /*Editing is not used by KEYPAD is be sure it is disabled*/
+            lv_group_focus_next(g);
+            if(indev_reset_check(&i->proc)) return;
+					//================================================================
+					#if 0
 					  /*Send the LV_KEY_NEXT as a normal KEY*/
             lv_group_send_data(g, LV_KEY_NEXT);
 
             lv_event_send(indev_obj_act, LV_EVENT_PRESSED, indev_act);
             if(indev_reset_check(&i->proc)) return;
-					
+					#endif
+					//================================================================
         }
         /*Move the focus on PREV*/
         else if(data->key == LV_KEY_PREV) {
-            
+            		
+					  lv_group_set_editing(g, false); /*Editing is not used by KEYPAD is be sure it is disabled*/
+            lv_group_focus_prev(g);
+            if(indev_reset_check(&i->proc)) return;
 					
-					
-					  ////lv_group_set_editing(g, false); /*Editing is not used by KEYPAD is be sure it is disabled*/
-            ////lv_group_focus_prev(g);
-            ////if(indev_reset_check(&i->proc)) return;
-					
-					
+					//===============================================================
+					#if 0
 						/*Send the LV_KEY_PREV as a normal KEY*/
             lv_group_send_data(g, LV_KEY_PREV);
 
             lv_event_send(indev_obj_act, LV_EVENT_PRESSED, indev_act);
             if(indev_reset_check(&i->proc)) return;
-					
+					#endif
+					//================================================================
 					
         }
+				else if(data->key == LV_USR_KEY_UP)
+				{
+				
+					/*Send the LV_USR_KEY_UP as a normal KEY*/
+            lv_group_send_data(g, LV_USR_KEY_UP);
+
+            lv_event_send(indev_obj_act, LV_EVENT_PRESSED, indev_act);
+            if(indev_reset_check(&i->proc)) return;
+				}
+				else if(data->key == LV_USR_KEY_DOWN)
+				{
+						/*Send the LV_USR_KEY_UP as a normal KEY*/
+            lv_group_send_data(g, LV_USR_KEY_DOWN);
+
+            lv_event_send(indev_obj_act, LV_EVENT_PRESSED, indev_act);
+            if(indev_reset_check(&i->proc)) return;
+				}
         /*Just send other keys to the object (e.g. 'A' or `LV_GROUP_KEY_RIGHT`)*/
         else {
             lv_group_send_data(g, data->key);
@@ -472,9 +492,17 @@ static void indev_keypad_proc(lv_indev_t * i, lv_indev_data_t * data)
 
         /*Long press time has elapsed?*/
         if(i->proc.long_pr_sent == 0 && lv_tick_elaps(i->proc.pr_timestamp) > i->driver->long_press_time) {
-            i->proc.long_pr_sent = 1;
+           
+
+  					i->proc.long_pr_sent = 1;
             if(data->key == LV_KEY_ENTER) {
                 i->proc.longpr_rep_timestamp = lv_tick_get();
+							
+							
+							//===========================
+							printf("elaps is %d\r\n",lv_tick_elaps(i->proc.pr_timestamp));
+							printf("long press time is %d\r\n",i->driver->long_press_time);
+							//===========================
                 lv_event_send(indev_obj_act, LV_EVENT_LONG_PRESSED, indev_act);
                 if(indev_reset_check(&i->proc)) return;
             }

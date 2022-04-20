@@ -407,6 +407,16 @@ static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
         case 5:
             act_key = LV_KEY_ENTER;
             break;
+				
+				case 145:
+					act_key = LV_USR_KEY_UP;
+					break;
+				
+				case 146:
+					act_key = LV_USR_KEY_DOWN;
+					break;
+				
+				
         }
 
         last_key = act_key;
@@ -430,7 +440,7 @@ static uint32_t keypad_get_key(void)
 	{
 		
 		//printf("key1 key1\n");
-		return 1;
+		return LV_USR_KEY_UP;
 	}
 	
 	key =0;
@@ -440,7 +450,8 @@ static uint32_t keypad_get_key(void)
 	{
 	   
 		//printf("key2 key2\n");
-		return 2;
+		//return LV_USR_KEY_DOWN;
+		return LV_KEY_ENTER;
 	}
     return 0;
 }
