@@ -196,6 +196,127 @@ uint8_t msg_buf[65535]={0};
 stp_frame_t stp_msg;
 
 
+
+
+uint32_t read_stp_msg(int fd,uint8_t* buf,uint16_t len)
+{
+
+	uint16_t nread =0;
+	nread = read(fd,buf,len);
+
+	if(nread >  0)
+	{
+		//printf("read data is %s\n",rxbuf);
+
+		for(uint16_t i =0;i<nread;i++)
+		{
+			stp_q.rbuf[stp_q.tail] = rxbuf[i];
+			stp_q.tail ++; 
+		}
+	}
+
+
+
+
+	while(stp_q.head != stp_q.tail)
+	{
+
+		if(stp_q.rbuf[stp_q.head]  == 'S')
+		{
+
+			//	printf("111111\n");
+			//	exit(0);
+			stp_q.head ++; 
+			if(stp_q.rbuf[stp_q.head]  == 'T')
+			{
+
+				//		printf("222222\n");
+				msg_buf[0] = 'S';
+				msg_buf[1] = 'T';
+				stp_msg.tag[0]= msg_buf[0] ;
+				stp_msg.tag[1]= msg_buf[1];
+
+
+				stp_q.head ++;
+				msg_buf[2]= stp_q.rbuf[stp_q.head]; 
+				stp_q.head ++;
+				msg_buf[3]= stp_q.rbuf[stp_q.head]; 
+				stp_msg.packet_num = msg_buf[2]*256 + msg_buf[3];
+
+
+				stp_q.head ++;
+				msg_buf[4]= stp_q.rbuf[stp_q.head]; 
+				stp_q.head ++;
+				msg_buf[5]= stp_q.rbuf[stp_q.head]; 
+
+				stp_msg.payload_len = msg_buf[4]*256 + msg_buf[5];
+
+				for(uint16_t i=0;i< stp_msg.payload_len; i++)
+				{
+					stp_q.head ++;
+					msg_buf[6 + i]= stp_q.rbuf[stp_q.head]; 
+					stp_msg.payload[i] = msg_buf[6 + i]; 
+
+
+				}
+
+				stp_q.head ++;
+				msg_buf[6 + stp_msg.payload_len] = stp_q.rbuf[stp_q.head]; 
+				stp_q.head ++;
+				msg_buf[7 + stp_msg.payload_len] = stp_q.rbuf[stp_q.head]; 
+
+				stp_msg.crc16 = msg_buf[6 + stp_msg.payload_len]*256 + msg_buf[7 + stp_msg.payload_len];
+#if 0
+				printf("\n===== msg is \n");
+				for(int i=0;i< (8 + stp_msg.payload_len);i++)
+				{
+					printf("%2x ",msg_buf[i]);
+				}
+				printf("\n=====\n");
+#endif
+				if(verify_stp_frame(&stp_msg) == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+
+				}
+
+
+
+			}
+			else
+			{
+				stp_q.head ++; 
+			}
+		}
+		else
+		{
+
+			stp_q.head ++; 
+		}
+
+
+
+
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
 int main(int argc, char** argv)
 {
 	int fd;
@@ -231,112 +352,40 @@ int main(int argc, char** argv)
 	uint8_t test_sn = 0;
 
 #if 0
-		for(int i=0;i<100;i++)
-		{
-			send_stp_frame(fd,test,sizeof(test),test_sn++);
-			sleep(2);
+	for(int i=0;i<100;i++)
+	{
+		send_stp_frame(fd,test,sizeof(test),test_sn++);
+		sleep(2);
 
-		}
+	}
 
 
 #endif
 
 
-
+	uint8_t stp_ack[] = "stp ack";
 
 	while(1)
 	{
-		nread = read(fd,rxbuf,1024);
+		send_stp_frame(fd,test,sizeof(test),test_sn++);
 
-		if(nread >  0)
-		{
-			//printf("read data is %s\n",rxbuf);
-
-			for(uint16_t i =0;i<nread;i++)
-			{
-				stp_q.rbuf[stp_q.tail] = rxbuf[i];
-				stp_q.tail ++; 
-			}
-		}
-
-
-
-
-		while(stp_q.head != stp_q.tail)
+		if(read_stp_msg(fd,rxbuf,1024) == 0)
 		{
 
-			if(stp_q.rbuf[stp_q.head]  == 'S')
+			printf("msg is %s\n",stp_msg.payload);
+
+			if(strncmp((char*)stp_msg.payload,stp_ack,strlen(stp_ack)) == 0)
 			{
-
-				//	printf("111111\n");
-				//	exit(0);
-				stp_q.head ++; 
-				if(stp_q.rbuf[stp_q.head]  == 'T')
-				{
-
-					//		printf("222222\n");
-					msg_buf[0] = 'S';
-					msg_buf[1] = 'T';
-					stp_msg.tag[0]= msg_buf[0] ;
-					stp_msg.tag[1]= msg_buf[1];
-
-
-					stp_q.head ++;
-					msg_buf[2]= stp_q.rbuf[stp_q.head]; 
-					stp_q.head ++;
-					msg_buf[3]= stp_q.rbuf[stp_q.head]; 
-					stp_msg.packet_num = msg_buf[2]*256 + msg_buf[3];
-
-
-					stp_q.head ++;
-					msg_buf[4]= stp_q.rbuf[stp_q.head]; 
-					stp_q.head ++;
-					msg_buf[5]= stp_q.rbuf[stp_q.head]; 
-
-					stp_msg.payload_len = msg_buf[4]*256 + msg_buf[5];
-
-					for(uint16_t i=0;i< stp_msg.payload_len; i++)
-					{
-						stp_q.head ++;
-						msg_buf[6 + i]= stp_q.rbuf[stp_q.head]; 
-						stp_msg.payload[i] = msg_buf[6 + i]; 
-
-
-					}
-
-					stp_q.head ++;
-					msg_buf[6 + stp_msg.payload_len] = stp_q.rbuf[stp_q.head]; 
-					stp_q.head ++;
-					msg_buf[7 + stp_msg.payload_len] = stp_q.rbuf[stp_q.head]; 
-
-					stp_msg.crc16 = msg_buf[6 + stp_msg.payload_len]*256 + msg_buf[7 + stp_msg.payload_len];
-#if 0
-					printf("\n===== msg is \n");
-					for(int i=0;i< (8 + stp_msg.payload_len);i++)
-					{
-						printf("%2x ",msg_buf[i]);
-					}
-					printf("\n=====\n");
-#endif
-					verify_stp_frame(&stp_msg);
-
-
-
-				}
-				else
-				{
-					stp_q.head ++; 
-				}
+				printf("stp ack\r\n");
 			}
 			else
 			{
-
-				stp_q.head ++; 
+				printf("error stp ack\r\n");
 			}
-
 
 		}
 	}
+
 
 	close(fd);
 
