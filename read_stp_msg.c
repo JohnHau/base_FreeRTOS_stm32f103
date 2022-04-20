@@ -231,6 +231,22 @@ int main(int argc, char** argv)
 	printf("fd = %d\n",fd);
 
 
+	uint8_t test[8] = {0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39};
+	uint8_t test_sn = 0;
+
+#if 0
+		for(int i=0;i<100;i++)
+		{
+			send_stp_frame(fd,test,sizeof(test),test_sn++);
+			sleep(2);
+
+		}
+
+
+#endif
+
+
+
 
 	while(1)
 	{
@@ -256,13 +272,13 @@ int main(int argc, char** argv)
 			if(stp_q.rbuf[stp_q.head]  == 'S')
 			{
 
-			//	printf("111111\n");
-			//	exit(0);
+				//	printf("111111\n");
+				//	exit(0);
 				stp_q.head ++; 
 				if(stp_q.rbuf[stp_q.head]  == 'T')
 				{
 
-			//		printf("222222\n");
+					//		printf("222222\n");
 					msg_buf[0] = 'S';
 					msg_buf[1] = 'T';
 					stp_msg.tag[0]= msg_buf[0] ;
