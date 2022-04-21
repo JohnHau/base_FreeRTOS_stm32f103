@@ -383,6 +383,7 @@ int main(int argc, char** argv)
 
 	while(1)
 	{
+		sleep(1);
 		send_stp_frame(fd,test,sizeof(test),test_sn++);
 
 		if(read_stp_msg(fd,rxbuf,1024) == 0)
@@ -411,7 +412,7 @@ int main(int argc, char** argv)
 					//
 					//send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
 					//
-					printf("T is %2x and R is %2x\n",stp_msg.payload[12],stp_msg.payload[14]);
+					printf("R is %d.%d and T is %d.%d\n",stp_msg.payload[12],stp_msg.payload[13], stp_msg.payload[14],stp_msg.payload[15]);
 				}
 
 
