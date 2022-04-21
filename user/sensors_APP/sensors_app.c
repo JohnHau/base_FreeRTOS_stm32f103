@@ -12,7 +12,7 @@
 
 #include "small_text_protocol/stp.h"
 #include "sensors_APP/sensors_app.h"
-
+#include "rtc/bsp_rtc.h"
 #include "../library/GUI/lvgl/lvgl.h"
 
 LV_FONT_DECLARE(warning_mark);
@@ -42,6 +42,7 @@ void sensors_thread(void *para)
 	
 	
 	
+	init_RTC();
 #if 0	
 		/* 创建Test_Queue */
   uart1_Queue = xQueueCreate((UBaseType_t ) QUEUE_LEN,/* 消息队列的长度 */
@@ -100,85 +101,93 @@ void sensors_thread(void *para)
 			//vTaskDelay(2000);
 			
 			
-			
-			vTaskDelay(2000);
 			scnt++;
-			if(DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
-			{
-				printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
-				DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
-				
-				
-				
-				
-				#define zhong "\xE4\xB8\xAD"
-				#define guo "\xE5\x98\xBD"
-				dht11_to_string(&DHT11_Data,DHT11_T,dht11_str);
-				
-				printf("\r\n now T is %s\r\n",(char*)dht11_str);
-				
-				//lv_label_set_text_fmt(lbl, "%d",DHT11_Data.temp_int);
-				//lv_label_set_text_fmt(lbl, "%s℃",dht11_str);
-				//lv_label_set_text_fmt(lbl, "%s",zhong guo);
-				
-				//lv_label_set_text(lbl,LV_SYMBOL_AUDIO);
-				//lv_label_set_text(lbl,"\xE2\x84\x83");
-				//lv_label_set_text_fmt(lbl, "%d",26);
-				
-				//lv_label_set_text(lbl,"\xC2\xB0""C");
-				
-				//lv_label_set_text_fmt(lbl_T, "%s\xC2\xB0""C",dht11_str);
-				
-						
-				
-				lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
-				
-				memset(dht11_str,0,sizeof(dht11_str));
-				dht11_to_string(&DHT11_Data,DHT11_R,dht11_str);
-				//lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
-				
-				
-				//send_stp_frame(USART3,stp_tempxx,sizeof(stp_tempxx),stp_sn++);
-				
-				
-				
-				
-				#if 0
-				if(lv_scr_act() == screen_00)
-				{
-				   lv_label_set_text(lbl,"\xEF\x81\xB1");
-									
-				}
-				#endif
-				
-				
-				#if 1
-				
-				if(scnt %4 ==0)
-				{
-				
-				   //lv_scr_load(screen_01);
-					
-					//lv_scr_load(scr_info);
-				
-				}
-				else
-				{
-				
-				   //lv_scr_load(screen_00);
-					//lv_scr_load(scr_rt);
-				}
-				
-				#endif
-				
-				
-			}			
-			else
-			{
-				printf("Read DHT11 ERROR!\r\n");
-			}
-		
+			vTaskDelay(1000);
+			/* 当前时间 */
+	    Time_Display(RTC_GetCounter(),&systmtime); 
+			lv_label_set_text_fmt(lbl_date_time, "%d-%d-%d-%d-%d-%d",systmtime.tm_year,systmtime.tm_mon,systmtime.tm_mday,systmtime.tm_hour,systmtime.tm_min,systmtime.tm_sec);
 			
+			
+			
+			
+	    if(scnt %2 ==0)
+	    {
+					if(DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
+					{
+						printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
+						DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
+						
+						
+						
+						
+						#define zhong "\xE4\xB8\xAD"
+						#define guo "\xE5\x98\xBD"
+						dht11_to_string(&DHT11_Data,DHT11_T,dht11_str);
+						
+						printf("\r\n now T is %s\r\n",(char*)dht11_str);
+						
+						//lv_label_set_text_fmt(lbl, "%d",DHT11_Data.temp_int);
+						//lv_label_set_text_fmt(lbl, "%s℃",dht11_str);
+						//lv_label_set_text_fmt(lbl, "%s",zhong guo);
+						
+						//lv_label_set_text(lbl,LV_SYMBOL_AUDIO);
+						//lv_label_set_text(lbl,"\xE2\x84\x83");
+						//lv_label_set_text_fmt(lbl, "%d",26);
+						
+						//lv_label_set_text(lbl,"\xC2\xB0""C");
+						
+						//lv_label_set_text_fmt(lbl_T, "%s\xC2\xB0""C",dht11_str);
+						
+								
+						
+						lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
+						
+						memset(dht11_str,0,sizeof(dht11_str));
+						dht11_to_string(&DHT11_Data,DHT11_R,dht11_str);
+						lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
+						
+						
+						//send_stp_frame(USART3,stp_tempxx,sizeof(stp_tempxx),stp_sn++);
+						
+						
+						
+						
+						#if 0
+						if(lv_scr_act() == screen_00)
+						{
+							 lv_label_set_text(lbl,"\xEF\x81\xB1");
+											
+						}
+						#endif
+						
+						
+						#if 1
+						
+						if(scnt %4 ==0)
+						{
+						
+							 //lv_scr_load(screen_01);
+							
+							//lv_scr_load(scr_info);
+						
+						}
+						else
+						{
+						
+							 //lv_scr_load(screen_00);
+							//lv_scr_load(scr_rt);
+						}
+						
+						#endif
+						
+						
+					}			
+					else
+					{
+						printf("Read DHT11 ERROR!\r\n");
+					}
+				
+		}	
 			
 			
 			

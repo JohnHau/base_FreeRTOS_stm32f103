@@ -18,6 +18,7 @@
 #include "../library/GUI/lv_port_indev.h"
 
 
+#include "rtc/bsp_rtc.h"
 
 #include "GUI_APP/gui_app.h"
 #include "sensors_APP/sensors_app.h"
@@ -122,6 +123,10 @@ int main ( void )
 	EXTI_Key_Config();
 	//SysTick_Init();
 	USART_Config();
+	
+	
+	//init_RTC();
+	
 	
 	init_stp_frame(&stp_frame_test,stp_frame_buf);
 	

@@ -27,7 +27,7 @@
  lv_obj_t * lbl_T = NULL;
  lv_obj_t * lbl_info = NULL;
  
- 
+ lv_obj_t * lbl_date_time = NULL;
  
  lv_obj_t* screen_00 = NULL;
  lv_obj_t* screen_01 = NULL;
@@ -460,11 +460,13 @@ lv_label_set_text_static(lbl_03,"987");
     lv_obj_set_size(lbl_T,60,20);	 
 		 
 	  lbl_R = lv_label_create(scr_rt);
-    lv_obj_set_pos(lbl_R,0,30);
+    lv_obj_set_pos(lbl_R,0,18);
     lv_obj_set_size(lbl_R,70,20);
 
 	 
-	 
+	  lbl_date_time = lv_label_create(scr_rt);
+    lv_obj_set_pos(lbl_date_time,0,36);
+    lv_obj_set_size(lbl_date_time,125,20);
 	 
 	 
 	   // lv_group_t * g = lv_group_get_default();
@@ -478,7 +480,7 @@ lv_label_set_text_static(lbl_03,"987");
 	 
    lv_obj_add_style(lbl_R,&style_lbl,LV_STATE_DEFAULT);
    lv_obj_add_style(lbl_T,&style_lbl,LV_STATE_DEFAULT);
-	 
+	 lv_obj_add_style(lbl_date_time,&style_lbl,LV_STATE_DEFAULT);
 	 
 	 
 	  screen_INFO();

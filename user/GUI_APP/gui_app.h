@@ -11,7 +11,7 @@ extern lv_obj_t * lbl;
 
 extern lv_obj_t * lbl_R;
 extern lv_obj_t * lbl_T;
-
+extern lv_obj_t * lbl_date_time;
 
 extern lv_obj_t* screen_00;
 extern lv_obj_t* screen_01;
