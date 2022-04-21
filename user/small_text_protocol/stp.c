@@ -285,6 +285,9 @@ uint8_t stp_tempx[8] = {0};
 
 uint8_t stp_ack[] = "stp ack";
 
+
+uint8_t dht11_rt[16]={'s','t','p',' ','d','a','t','d','h','t','1','1',0x14,0x15,0x16,0x17};
+
 void stp_thread(void)
 {
   BaseType_t xReturn =pdPASS;
@@ -309,15 +312,36 @@ while(1)
 				       static uint8_t mn =1;
 		           //printf("\r\n valid stp frame\r\n");
 		           //lv_label_set_text_fmt(lbl_R, "%d stp",mn++);
-				       send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
+				       //send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
 				 
 				 
+				 
+				  	   if(strncmp((char*)stp_frame_test.payload,"stp cmd",strlen("stp cmd")) == 0)
+							 {
+									//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
+								 
+								 if(strncmp((char*)stp_frame_test.payload + 7,"dht11",strlen("dht11")) == 0)
+								 {
+								     //send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);dht11_rt
+									   send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
+								 }
+								 
+								 
+								 //printf("stp ack\r\n");
+							 }
+							 else
+							 {
+							    //printf("error st write start\r\n");
+							 }
+				 
+							
 				 
 				 
 				 
 				 	     if(strncmp((char*)stp_frame_test.payload,"stp ack",strlen("stp ack")) == 0)
 							 {
-									printf("stp ack\r\n");
+									send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
+								 //printf("stp ack\r\n");
 							 }
 							 else
 							 {
