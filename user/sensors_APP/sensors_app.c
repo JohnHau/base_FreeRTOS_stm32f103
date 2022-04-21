@@ -27,7 +27,7 @@ uint8_t stp_tempxx[16] = {0x39,0x38,0x37,0x36,0x36,0x35,0x34,0x33,'a','b','c','d
 uint8_t stp_sn =0;
 
 
-
+DHT11_Data_TypeDef sensor_DHT11_Data;
 
 void sensors_thread(void *para)
 {
@@ -35,7 +35,7 @@ void sensors_thread(void *para)
   
 	BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
 	uint32_t r_queue;	/* 定义一个接收消息的变量 */
-	DHT11_Data_TypeDef DHT11_Data;
+	
 	DHT11_Init ();
   BASIC_TIM_Init();
 	printf("DHT11 tatsk\r\n");
@@ -84,7 +84,7 @@ void sensors_thread(void *para)
 #if 0	 
 		
 		//portDISABLE_INTERRUPTS();
-		if( DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
+		if( DHT11_Read_TempAndHumidity (&sensor_DHT11_Data) == SUCCESS)
 			{
 				
 				printf("\r\n Humidity:%d.%d%% RH,Temperture:%d.%d Cel\r\n",\
@@ -112,17 +112,17 @@ void sensors_thread(void *para)
 			
 	    if(scnt %2 ==0)
 	    {
-					if(DHT11_Read_TempAndHumidity ( & DHT11_Data ) == SUCCESS)
+					if(DHT11_Read_TempAndHumidity (&sensor_DHT11_Data) == SUCCESS)
 					{
 						printf("\r\n读取DHT11成功!\r\n\r\n湿度为%d.%d ％RH ，温度为 %d.%d℃ \r\n",\
-						DHT11_Data.humi_int,DHT11_Data.humi_deci,DHT11_Data.temp_int,DHT11_Data.temp_deci);
+						sensor_DHT11_Data.humi_int,sensor_DHT11_Data.humi_deci,sensor_DHT11_Data.temp_int,sensor_DHT11_Data.temp_deci);
 						
 						
 						
 						
 						#define zhong "\xE4\xB8\xAD"
 						#define guo "\xE5\x98\xBD"
-						dht11_to_string(&DHT11_Data,DHT11_T,dht11_str);
+						dht11_to_string(&sensor_DHT11_Data,DHT11_T,dht11_str);
 						
 						printf("\r\n now T is %s\r\n",(char*)dht11_str);
 						
@@ -143,7 +143,7 @@ void sensors_thread(void *para)
 						lv_label_set_text_fmt(lbl_T, "%s""\xC2\xB0""C",dht11_str);
 						
 						memset(dht11_str,0,sizeof(dht11_str));
-						dht11_to_string(&DHT11_Data,DHT11_R,dht11_str);
+						dht11_to_string(&sensor_DHT11_Data,DHT11_R,dht11_str);
 						lv_label_set_text_fmt(lbl_R, "%s""%%""RH",dht11_str);
 						
 						

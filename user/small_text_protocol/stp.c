@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "usart/bsp_usart.h"
-#include "CRC16/CRC16.h"
-#include "small_text_protocol/stp.h"
+
 
 #include "FreeRTOS.h"					//FreeRTOS π”√		  
 #include "task.h" 
 #include "queue.h"
 #include "semphr.h"	
+
+
+#include "usart/bsp_usart.h"
+#include "CRC16/CRC16.h"
+#include "dht11/bsp_dht11.h"
+#include "small_text_protocol/stp.h"
+#include "sensors_APP/sensors_app.h"
 
 #include "../library/GUI/lvgl/lvgl.h"
 #include "GUI_APP/gui_app.h"
@@ -288,42 +293,60 @@ uint8_t stp_ack[] = "stp ack";
 
 uint8_t dht11_rt[16]={'s','t','p',' ','d','a','t','d','h','t','1','1',0x14,0x15,0x16,0x17};
 
-void stp_thread(void)
+
+
+
+#define STP_DHT11_R_INT    dht11_rt[12]
+#define STP_DHT11_R_FRA    dht11_rt[13]
+#define STP_DHT11_T_INT    dht11_rt[14]
+#define STP_DHT11_T_FRA    dht11_rt[15]
+
+
+
+
+
+
+
+uint32_t stp_msg_process(stp_frame_t *stp_usr_msg)
 {
-  BaseType_t xReturn =pdPASS;
-	init_stp_frame(&stp_frame_test,stp_frame_buf);
-	
-	for(cnt=0;cnt<8;cnt++)
-		stp_tempx[cnt] = 0x31;
-	
-BinarySem_stp_Handle = xSemaphoreCreateBinary();
-while(1)
-{
-	   
-	
-	
-	xReturn =xSemaphoreTake(BinarySem_stp_Handle,portMAX_DELAY);
-	  if(1)//if(stp_signal)
-		 {
-		   stp_signal =0;
-		   if(verify_stp_frame(&stp_frame_test) == 0)
-			 {	 
-				 
-				       static uint8_t mn =1;
+
+	       static uint8_t mn =1;
 		           //printf("\r\n valid stp frame\r\n");
 		           //lv_label_set_text_fmt(lbl_R, "%d stp",mn++);
 				       //send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
 				 
-				 
-				 
-				  	   if(strncmp((char*)stp_frame_test.payload,"stp cmd",strlen("stp cmd")) == 0)
+				  if(verify_stp_frame(&stp_frame_test) == 0)
+					{
+				  	   if(strncmp((char*)stp_usr_msg->payload,"stp cmd",strlen("stp cmd")) == 0)
 							 {
 									//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
 								 
-								 if(strncmp((char*)stp_frame_test.payload + 7,"dht11",strlen("dht11")) == 0)
+								 if(strncmp((char*)stp_usr_msg->payload + 7,"dht11",strlen("dht11")) == 0)
 								 {
 								     //send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);dht11_rt
-									   send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
+									 
+									 
+									 
+									// STP_DHT11_R_INT = 0x76;//sensor_DHT11_Data.humi_int;
+									// STP_DHT11_R_FRA = 0x77;//sensor_DHT11_Data.humi_deci;
+
+
+									// STP_DHT11_T_INT = 0x78;//sensor_DHT11_Data.temp_int;
+									// STP_DHT11_T_FRA = 0x79;//sensor_DHT11_Data.temp_deci;
+									 
+									 
+									 
+									 STP_DHT11_R_INT = sensor_DHT11_Data.humi_int;
+									 STP_DHT11_R_FRA = sensor_DHT11_Data.humi_deci;
+
+
+									 STP_DHT11_T_INT = sensor_DHT11_Data.temp_int;
+									 STP_DHT11_T_FRA = sensor_DHT11_Data.temp_deci;
+									 
+									 
+									 
+									 
+									   send_stp_frame(USART3,dht11_rt,sizeof(dht11_rt),mn++);
 								 }
 								 
 								 
@@ -338,7 +361,7 @@ while(1)
 				 
 				 
 				 
-				 	     if(strncmp((char*)stp_frame_test.payload,"stp ack",strlen("stp ack")) == 0)
+				 	     if(strncmp((char*)stp_usr_msg->payload,"stp ack",strlen("stp ack")) == 0)
 							 {
 									send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
 								 //printf("stp ack\r\n");
@@ -352,7 +375,7 @@ while(1)
 				 
 				 
 				 
-							 if(strncmp((char*)stp_frame_test.payload,"ST WRITE START\r\n",strlen("ST WRITE START\r\n")) == 0)
+							 if(strncmp((char*)stp_usr_msg->payload,"ST WRITE START\r\n",strlen("ST WRITE START\r\n")) == 0)
 							 {
 									printf("st write start\r\n");
 							 }
@@ -363,7 +386,7 @@ while(1)
 							 //printf("start is %s\n",stp_frame_test.payload);
 							 
 							 
-							 if(strncmp((char*)stp_frame_test.payload,"ST WRITE END\r\n",strlen("ST WRITE END\r\n")) == 0)
+							 if(strncmp((char*)stp_usr_msg->payload,"ST WRITE END\r\n",strlen("ST WRITE END\r\n")) == 0)
 							 {
 									printf("st write end\r\n");
 							 }
@@ -374,7 +397,7 @@ while(1)
 							 
 							 
 							 
-							 if(strncmp((char*)stp_frame_test.payload,"ST READ START\r\n",strlen("ST READ START\r\n")) == 0)
+							 if(strncmp((char*)stp_usr_msg->payload,"ST READ START\r\n",strlen("ST READ START\r\n")) == 0)
 							 {
 									
 								 //send_stp_frame(USART1,"ST READ ACK\r\n",strlen("ST READ ACK\r\n"),0);
@@ -389,7 +412,7 @@ while(1)
 							 //printf("start is %s\n",stp_frame_test.payload);
 							 
 							 
-							 if(strncmp((char*)stp_frame_test.payload,"ST READ END\r\n",strlen("ST READ END\r\n")) == 0)
+							 if(strncmp((char*)stp_usr_msg->payload,"ST READ END\r\n",strlen("ST READ END\r\n")) == 0)
 							 {
 									printf("st read end\r\n");
 							 }
@@ -397,7 +420,6 @@ while(1)
 							 {
 							    //printf("error st write end\r\n");
 							 }
-							 
 							 
 							 
 							 if(stp_read_signal)
@@ -419,13 +441,43 @@ while(1)
 							 
 							 
 							 
-			 
-			 }
-			 
-			 memset(stp_frame_test.payload,0,512*2);
-		 }
+							 
+						 }
+					
+						 
+					memset(stp_frame_test.payload,0,512*2);	 
 
 }
+
+
+
+
+
+
+
+
+
+void stp_thread(void)
+{
+  BaseType_t xReturn =pdPASS;
+	init_stp_frame(&stp_frame_test,stp_frame_buf);
+	
+	for(cnt=0;cnt<8;cnt++)
+		stp_tempx[cnt] = 0x31;
+	
+	BinarySem_stp_Handle = xSemaphoreCreateBinary();
+	while(1)
+	{
+			 
+		
+		
+		xReturn =xSemaphoreTake(BinarySem_stp_Handle,portMAX_DELAY);
+		
+		
+		stp_msg_process(&stp_frame_test);
+
+
+	}
 
 
 
