@@ -348,7 +348,7 @@ int main(int argc, char** argv)
 	printf("fd = %d\n",fd);
 
 
-	uint8_t test[8] = {0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39};
+	uint8_t test[16] = {0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39};
 	uint8_t test_sn = 0;
 
 #if 0
@@ -361,8 +361,24 @@ int main(int argc, char** argv)
 
 
 #endif
+	test[0] = 's';
+	test[1] = 't';
+	test[2] = 'p';
+	test[3] = ' ';
+	test[4] = 'c';
+	test[5] = 'm';
+	test[6] = 'd';
 
+	test[7] = 'd';
+	test[8] = 'h';
+	test[9] = 't';
+	test[10] = '1';
+	test[11] = '1';
 
+	test[12] = 0x71;
+	test[13] = 0x72;
+	test[14] = 0x73;
+	test[15] = 0x74;
 	uint8_t stp_ack[] = "stp ack";
 
 	while(1)
@@ -382,6 +398,30 @@ int main(int argc, char** argv)
 			{
 				printf("error stp ack\r\n");
 			}
+
+
+
+			if(strncmp((char*)stp_msg.payload,"stp dat",strlen("stp dat")) == 0)
+			{
+				//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
+
+				if(strncmp((char*)stp_msg.payload + 7,"dht11",strlen("dht11")) == 0)
+				{
+					//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);dht11_rt
+					//
+					//send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
+					//
+					printf("T is %2x and R is %2x\n",stp_msg.payload[12],stp_msg.payload[14]);
+				}
+
+
+				//printf("stp ack\r\n");
+			}
+			else
+			{
+				//printf("error st write start\r\n");
+			}
+
 
 		}
 	}
