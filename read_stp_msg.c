@@ -195,6 +195,7 @@ uint8_t stp_msg_buf[65535]={0};
 uint8_t msg_buf[65535]={0};
 stp_frame_t stp_msg;
 
+uint8_t stp_ack[] = "stp ack";
 
 
 
@@ -309,7 +310,53 @@ uint32_t read_stp_msg(int fd,uint8_t* buf,uint16_t len)
 }
 
 
+uint32_t  stp_msg_process(stp_frame_t* stp_msg_received)
+{
 
+	printf("msg is %s\n",stp_msg.payload);
+
+	if(strncmp((char*)stp_msg.payload,stp_ack,strlen(stp_ack)) == 0)
+	{
+		printf("stp ack\r\n");
+	}
+	else
+	{
+		printf("error stp ack\r\n");
+	}
+
+
+
+	if(strncmp((char*)stp_msg.payload,"stp dat",strlen("stp dat")) == 0)
+	{
+		//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
+
+		if(strncmp((char*)stp_msg.payload + 7,"dht11",strlen("dht11")) == 0)
+		{
+			//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);dht11_rt
+			//
+			//send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
+			//
+			printf("R is %d.%d and T is %d.%d\n",stp_msg.payload[12],stp_msg.payload[13],
+					stp_msg.payload[14],stp_msg.payload[15]);
+
+
+			return 0;
+		}
+
+
+		//printf("stp ack\r\n");
+	}
+	else
+	{
+		//printf("error st write start\r\n");
+	}
+
+
+
+	return 1;
+
+
+}
 
 
 
@@ -379,7 +426,6 @@ int main(int argc, char** argv)
 	test[13] = 0x72;
 	test[14] = 0x73;
 	test[15] = 0x74;
-	uint8_t stp_ack[] = "stp ack";
 
 	while(1)
 	{
@@ -388,41 +434,7 @@ int main(int argc, char** argv)
 
 		if(read_stp_msg(fd,rxbuf,1024) == 0)
 		{
-
-			printf("msg is %s\n",stp_msg.payload);
-
-			if(strncmp((char*)stp_msg.payload,stp_ack,strlen(stp_ack)) == 0)
-			{
-				printf("stp ack\r\n");
-			}
-			else
-			{
-				printf("error stp ack\r\n");
-			}
-
-
-
-			if(strncmp((char*)stp_msg.payload,"stp dat",strlen("stp dat")) == 0)
-			{
-				//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);
-
-				if(strncmp((char*)stp_msg.payload + 7,"dht11",strlen("dht11")) == 0)
-				{
-					//send_stp_frame(USART3,stp_ack,strlen((char*)stp_ack),mn++);dht11_rt
-					//
-					//send_stp_frame(USART3,dht11_rt,strlen((char*)dht11_rt),mn++);
-					//
-					printf("R is %d.%d and T is %d.%d\n",stp_msg.payload[12],stp_msg.payload[13], stp_msg.payload[14],stp_msg.payload[15]);
-				}
-
-
-				//printf("stp ack\r\n");
-			}
-			else
-			{
-				//printf("error st write start\r\n");
-			}
-
+			stp_msg_process(&stp_msg);
 
 		}
 	}
