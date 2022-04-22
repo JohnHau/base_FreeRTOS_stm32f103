@@ -67,6 +67,8 @@ void USART_Config(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(DEBUG_USART_RX_GPIO_PORT, &GPIO_InitStructure);
 	
+	
+	
 	// 配置串口的工作参数
 	// 配置波特率
 	USART_InitStructure.USART_BaudRate = DEBUG_USART_BAUDRATE;
@@ -77,8 +79,7 @@ void USART_Config(void)
 	// 配置校验位
 	USART_InitStructure.USART_Parity = USART_Parity_No ;
 	// 配置硬件流控制
-	USART_InitStructure.USART_HardwareFlowControl = 
-	USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	// 配置工作模式，收发一起
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	// 完成串口的初始化配置
@@ -96,7 +97,7 @@ void USART_Config(void)
 	// 使能串口
 	USART_Cmd(DEBUG_USARTx, ENABLE);	    
 	
-	 USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
+	USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
 	
 	
 	
@@ -135,8 +136,11 @@ void USART_Config(void)
 
     USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
     USART_Cmd(USART1, ENABLE);
-	#endif
+#endif
 	
+	
+	
+#if 0
 	BinarySem_Handle = xSemaphoreCreateBinary();
 	
 	if(BinarySem_Handle != NULL)
@@ -144,6 +148,7 @@ void USART_Config(void)
 	  printf("create BinarySem_Hanle ok\r\n");
 	}
 	
+#endif
 	
 }
 

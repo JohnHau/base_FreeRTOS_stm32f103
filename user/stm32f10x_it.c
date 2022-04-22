@@ -226,8 +226,30 @@ void uart1_DMA_rx_data(void)
 /******************************************************************************/
 void USART1_IRQHandler(void)
 {
+		
 	
-#if 1
+#if 0
+	uint8_t ucTemp;
+	
+	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_RXNE)!=RESET)
+	{		
+		ucTemp = USART_ReceiveData(DEBUG_USARTx);
+    //USART_SendData(DEBUG_USARTx,ucTemp);    
+		printf("================usart1===================\r\n");
+		//stp_state_machine(&stp_frame_test,ucTemp);
+
+	}	 
+	
+	
+#endif
+	
+	
+	
+	
+	
+	
+//=======================================================================================	
+#if 0
 	static uint8_t i=0;
 	uint8_t ch_rx_uart1=0;
 	uint32_t send_data = 0x11111111;
@@ -294,10 +316,12 @@ void USART1_IRQHandler(void)
 		
   }
 
+	
 #endif
+//=================================================================================	
 	
-	
-	
+
+//==================================================	
 #if 0
 	uint32_t ulReturn;
 	ulReturn = taskENTER_CRITICAL_FROM_ISR();
@@ -312,6 +336,9 @@ void USART1_IRQHandler(void)
 	
 	taskEXIT_CRITICAL_FROM_ISR(ulReturn);
 #endif
+//=================================================	
+	
+	
 }
 
 
@@ -334,8 +361,12 @@ void  TIM6_IRQHandler (void)
 
 
 
-void USART3_IRQHandler(void)
+
+
+void USART2_IRQHandler(void)
 {
+	
+	#if 0
 	 uint8_t ucTemp;
 	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_RXNE)!=RESET)
 	{		
@@ -345,7 +376,34 @@ void USART3_IRQHandler(void)
 		stp_state_machine(&stp_frame_test,ucTemp);
 
 	}	 
+	#endif
 
+}
+
+
+
+
+
+
+
+
+void USART3_IRQHandler(void)
+{
+	
+#if 1
+	uint8_t ucTemp;
+	if(USART_GetITStatus(DEBUG_USARTx,USART_IT_RXNE)!=RESET)
+	{		
+		ucTemp = USART_ReceiveData(DEBUG_USARTx);
+    //USART_SendData(DEBUG_USARTx,ucTemp);    
+		
+		stp_state_machine(&stp_frame_test,ucTemp);
+
+	}	 
+#endif
+	
+	
+	
 }
 
 

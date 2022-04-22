@@ -12,6 +12,11 @@
 #include "small_text_protocol/stp.h"
 #include "CRC16/CRC16.h"
 #include "flash/bsp_spi_flash.h"
+#include "nRF24L01/24L01.h"
+
+
+
+
 #include "i2c/bsp_i2c_ee.h"
 #include "../library/GUI/lvgl/lvgl.h"
 #include "../library/GUI/lv_port_disp.h"
@@ -105,7 +110,18 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 }
 
 
+void xxxx_delay_ms(uint32_t n)
+{
+   uint32_t i,j;
+	while(n)
+	{
+   
+		for(i=0;i<1000;i++)
+         for(j=0;j<1000;j++);
+    n--;
+	}
 
+}
 
 int main ( void )
 {
@@ -114,6 +130,106 @@ int main ( void )
 	BaseType_t xReturn =pdPASS;
 	
 
+//==========================================
+//==========================================
+#if 0
+	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+	USART_Config();
+	printf("Hello flash123\r");
+			/* 8M串行flash W25Q64初始化 */
+	SPI_FLASH_Init();
+	NRF24L01_Init();    //初始化NRF24L01 
+	/* 获取 Flash Device ID */
+	
+
+	DeviceID = SPI_FLASH_ReadDeviceID();	
+	printf("DeviceID is %x\n",DeviceID);
+	
+	xxxx_delay_ms(5);
+		/* 获取 SPI Flash ID */
+	//FlashID = SPI_FLASH_ReadID();	
+	//printf("\r\n FlashID is 0x%X,Manufacturer Device ID is 0x%X\r\n", FlashID, DeviceID);
+	
+	
+	SPI_CPOL_CPHA_nRF24L01_Init();
+	if(NRF24L01_Check())
+	{
+		printf("24L01 error\r\n");
+	
+	}
+	else
+	{
+	  printf("24L01 there\r\n");
+	}
+	
+	
+	uint8_t tmp_buf[64]={0}; 
+
+//=====================================================================
+#if 0	
+	for(uint8_t i=0;i<32;i++)
+	{
+		tmp_buf[i]=0x55;//调试的时候，可以用此帧数据测试发送与接收情况
+	}
+	TX_Mode();
+	
+	while(1)
+	{
+	
+	   if(NRF24L01_TxPacket(tmp_buf)==TX_OK)
+		 {
+		 
+		 }
+	 xxxx_delay_ms(20);
+	
+	}
+	
+	
+#endif
+//======================================================================	
+	
+	
+	
+	
+//======================================================================
+#if 0
+	RX_Mode();	
+	
+	while(1)
+	{
+	
+	
+			if(NRF24L01_RxPacket(tmp_buf)==0)//一旦接收到信息,则显示出来.
+				{
+				  tmp_buf[32]=0;//加入字符串结束符
+
+			    printf("rx is %s\r\n",tmp_buf);
+					
+				}
+				
+	    xxxx_delay_ms(20);
+	}
+	
+	
+#endif
+//=======================================================================	
+	
+	
+	
+	
+	
+	
+#endif
+//=============================================================
+//=============================================================
+	
+	
+	
+	
+	
+	
+	
+	
 	DHT11_Init ();
 	BASIC_TIM_Init();
 	
@@ -124,16 +240,10 @@ int main ( void )
 	//SysTick_Init();
 	USART_Config();
 	
-	
-	//init_RTC();
+	init_RTC();
 	
 	
 	init_stp_frame(&stp_frame_test,stp_frame_buf);
-	
-	
-	
-	
-	
 
 	ppp = malloc(8);
 	if(ppp == NULL)
@@ -175,26 +285,35 @@ int main ( void )
 	
 	//======================================================================
 	
+	
+#if 1
+	
+	
 #define  FLASH_WriteAddress     0x00000
 #define  FLASH_ReadAddress      FLASH_WriteAddress
 #define  FLASH_SectorToErase    FLASH_WriteAddress
 	
 	
-	
+	SPI_CPOL_CPHA_nRF24L01_Init();
 		/* 8M串行flash W25Q64初始化 */
 	SPI_FLASH_Init();
 	
 	/* 获取 Flash Device ID */
+	
+	
+	//u16 xid = SPI_Flash_ReadID();
+	//printf("xid is %x\n",xid);
+	//while(1);
+	
 	DeviceID = SPI_FLASH_ReadDeviceID();	
 	delay( 200 );
 	
 	/* 获取 SPI Flash ID */
 	FlashID = SPI_FLASH_ReadID();	
-	printf("\r\n FlashID is 0x%X,\
-	Manufacturer Device ID is 0x%X\r\n", FlashID, DeviceID);
-	
+	printf("\r\n FlashID is 0x%X,Manufacturer Device ID is 0x%X\r\n", FlashID, DeviceID);
+
 	/* 检验 SPI Flash ID */
-	if (FlashID == sFLASH_ID)
+	if(1)//(FlashID == sFLASH_ID)
 	{	
 		printf("\r\n 检测到串行flash W25Q64 !\r\n");
 		
@@ -233,9 +352,32 @@ int main ( void )
 	
 	
 	
-	
+	#endif
 	
 	//=======================================================================
+	
+	
+	
+	
+	SPI_CPOL_CPHA_nRF24L01_Init();
+	NRF24L01_Init();    //初始化NRF24L01 
+	if(NRF24L01_Check())
+	{
+		printf("24L01 error\r\n");
+	
+	}
+	else
+	{
+	  printf("24L01 there\r\n");
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -264,19 +406,9 @@ int main ( void )
 					
 
 
-												
-												
-//	xReturn = xTaskCreate((TaskFunction_t)stp_thread,
-//	                      (const char*)"stp_thread",
-//												(uint16_t)512,
-//												(void*)NULL,
-//												(UBaseType_t)2,
-//												(TaskHandle_t*)&stp_Task_Handle);											
-												
-												
-												
+													
 					
-
+				
 
 xReturn = xTaskCreate((TaskFunction_t)OLED_thread,
 	                      (const char*)"OLED_thread",
@@ -287,7 +419,11 @@ xReturn = xTaskCreate((TaskFunction_t)OLED_thread,
 
 
 
-												
+	
+
+
+
+				
 												
 xReturn = xTaskCreate((TaskFunction_t)sensors_thread,
 	                      (const char*)"sensors_thread",
@@ -295,14 +431,26 @@ xReturn = xTaskCreate((TaskFunction_t)sensors_thread,
 												(void*)NULL,
 												(UBaseType_t)2,
 												(TaskHandle_t*)&sensors_thread_Handle);										
-												
-												
+		
+
+
+											
 xReturn = xTaskCreate((TaskFunction_t)stp_thread,
 	                      (const char*)"stp_thread",
 												(uint16_t)512,
 												(void*)NULL,
 												(UBaseType_t)2,
-												(TaskHandle_t*)&stp_thread_Handle);															
+												(TaskHandle_t*)&stp_thread_Handle);				
+
+
+
+
+
+
+
+
+
+												
 											
 #endif	
 						

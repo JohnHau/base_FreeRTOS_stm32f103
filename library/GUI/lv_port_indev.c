@@ -433,23 +433,23 @@ static uint32_t keypad_get_key(void)
     /*Your code comes here*/
 
 	
-	uint32_t key =0;
+	uint8_t key =0;
 	key = GPIO_ReadInputDataBit(KEY1_INT_GPIO_PORT, KEY1_INT_GPIO_PIN);
 	
-	if(key)
+	if(key == 0)
 	{
 		
-		//printf("key1 key1\n");
+		printf("key1 key1\n");
 		return LV_USR_KEY_UP;
 	}
 	
 	key =0;
 	key = GPIO_ReadInputDataBit(KEY2_INT_GPIO_PORT, KEY2_INT_GPIO_PIN);
 	
-	if(key)
+	if(key == 0)
 	{
 	   
-		//printf("key2 key2\n");
+		printf("key2 key2\n");
 		//return LV_USR_KEY_DOWN;
 		return LV_KEY_ENTER;
 	}

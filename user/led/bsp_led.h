@@ -15,6 +15,7 @@
 
 
 /* 定义LED连接的GPIO端口, 用户只需要修改下面的代码即可改变控制的LED引脚 */
+#if 0
 #define LED1_GPIO_PORT    	GPIOC		              /* GPIO端口 */
 #define LED1_GPIO_CLK 	    RCC_APB2Periph_GPIOC		/* GPIO端口时钟 */
 #define LED1_GPIO_PIN			GPIO_Pin_2			        
@@ -22,6 +23,22 @@
 #define LED2_GPIO_PORT    	GPIOC			              /* GPIO端口 */
 #define LED2_GPIO_CLK 	    RCC_APB2Periph_GPIOC		/* GPIO端口时钟 */
 #define LED2_GPIO_PIN		GPIO_Pin_3			        
+
+#endif
+
+
+
+
+#if 1
+#define LED1_GPIO_PORT    	GPIOA		              /* GPIO端口 */
+#define LED1_GPIO_CLK 	    RCC_APB2Periph_GPIOA		/* GPIO端口时钟 */
+#define LED1_GPIO_PIN			  GPIO_Pin_8			        
+
+#define LED2_GPIO_PORT    	GPIOD			              /* GPIO端口 */
+#define LED2_GPIO_CLK 	    RCC_APB2Periph_GPIOD		/* GPIO端口时钟 */
+#define LED2_GPIO_PIN		    GPIO_Pin_2			        
+
+#endif
 
 
 
@@ -68,6 +85,7 @@
 
 
 //引脚定义
+#if 0
 #define KEY1_INT_GPIO_PORT         GPIOA
 #define KEY1_INT_GPIO_CLK          (RCC_APB2Periph_GPIOA|RCC_APB2Periph_AFIO)
 #define KEY1_INT_GPIO_PIN          GPIO_Pin_0
@@ -88,6 +106,46 @@
 #define KEY2_INT_EXTI_IRQ          EXTI15_10_IRQn
 
 #define KEY2_IRQHandler            EXTI15_10_IRQHandler
+
+
+#endif
+
+
+
+
+#if 1
+#define KEY1_INT_GPIO_PORT         GPIOC
+//#define KEY1_INT_GPIO_CLK          (RCC_APB2Periph_GPIOC|RCC_APB2Periph_AFIO)
+#define KEY1_INT_GPIO_CLK          (RCC_APB2Periph_GPIOC)
+#define KEY1_INT_GPIO_PIN          GPIO_Pin_1
+#define KEY1_INT_EXTI_PORTSOURCE   GPIO_PortSourceGPIOC
+#define KEY1_INT_EXTI_PINSOURCE    GPIO_PinSource1
+#define KEY1_INT_EXTI_LINE         EXTI_Line1
+#define KEY1_INT_EXTI_IRQ          EXTI1_IRQn
+
+#define KEY1_IRQHandler            EXTI1_IRQHandler
+
+
+#define KEY2_INT_GPIO_PORT         GPIOC
+//#define KEY2_INT_GPIO_CLK          (RCC_APB2Periph_GPIOC|RCC_APB2Periph_AFIO)
+#define KEY2_INT_GPIO_CLK          (RCC_APB2Periph_GPIOC)
+#define KEY2_INT_GPIO_PIN          GPIO_Pin_13
+#define KEY2_INT_EXTI_PORTSOURCE   GPIO_PortSourceGPIOC
+#define KEY2_INT_EXTI_PINSOURCE    GPIO_PinSource13
+#define KEY2_INT_EXTI_LINE         EXTI_Line13
+#define KEY2_INT_EXTI_IRQ          EXTI15_10_IRQn
+
+#define KEY2_IRQHandler            EXTI15_10_IRQHandler
+
+
+#endif
+
+
+
+
+
+
+
 
 void EXTI_Key_Config(void);
 

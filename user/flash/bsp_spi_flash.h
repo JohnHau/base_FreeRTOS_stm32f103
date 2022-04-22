@@ -37,6 +37,8 @@
 
 
 /*SPI接口定义-开头****************************/
+
+#if 1
 #define      FLASH_SPIx                        SPI1
 #define      FLASH_SPI_APBxClock_FUN          RCC_APB2PeriphClockCmd
 #define      FLASH_SPI_CLK                     RCC_APB2Periph_SPI1
@@ -45,7 +47,7 @@
 #define      FLASH_SPI_CS_APBxClock_FUN       RCC_APB2PeriphClockCmd
 #define      FLASH_SPI_CS_CLK                  RCC_APB2Periph_GPIOA    
 #define      FLASH_SPI_CS_PORT                 GPIOA
-#define      FLASH_SPI_CS_PIN                  GPIO_Pin_4
+#define      FLASH_SPI_CS_PIN                  GPIO_Pin_2
 
 //SCK引脚
 #define      FLASH_SPI_SCK_APBxClock_FUN      RCC_APB2PeriphClockCmd
@@ -65,6 +67,41 @@
 
 #define  		SPI_FLASH_CS_LOW()     						GPIO_ResetBits( FLASH_SPI_CS_PORT, FLASH_SPI_CS_PIN )
 #define  		SPI_FLASH_CS_HIGH()    						GPIO_SetBits( FLASH_SPI_CS_PORT, FLASH_SPI_CS_PIN )
+
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*SPI接口定义-结尾****************************/
 
@@ -101,6 +138,14 @@ u16 SPI_FLASH_SendHalfWord(u16 HalfWord);
 void SPI_FLASH_WriteEnable(void);
 void SPI_FLASH_WaitForWriteEnd(void);
 																					
+
+
+
+//==============================================================================
+
+void SPI_CPOL_CPHA_Flash_Init(void);
+void SPI_CPOL_CPHA_nRF24L01_Init(void);
+
 
 
 #endif /* __SPI_FLASH_H */

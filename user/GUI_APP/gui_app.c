@@ -417,12 +417,13 @@ lv_label_set_text_static(lbl_03,"987");
 					 }
 					 else if(mk == LV_KEY_ENTER) 
 					 {
-					 
+					    printf("lbl callback KEY_ENTER\r\n");
 					    cnt =0;
 					 }
 					 else if(mk == LV_USR_KEY_UP) 
 					 {
-					    cnt ++;
+					   printf("lbl callback KEY_UP\r\n"); 
+						 cnt ++;
 					 }
 						 //lv_obj_t *label = lv_obj_get_child(btn,0);
 						 //lv_label_set_text_fmt(label,"B%d",cnt);

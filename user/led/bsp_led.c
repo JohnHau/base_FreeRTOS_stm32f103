@@ -44,7 +44,7 @@ void EXTI_Key_Config(void)
 
 	/*开启按键GPIO口的时钟*/
 	RCC_APB2PeriphClockCmd(KEY1_INT_GPIO_CLK,ENABLE);
-												
+													
 	/* 配置 NVIC 中断*/
 	//NVIC_Configuration();
 	
@@ -52,12 +52,14 @@ void EXTI_Key_Config(void)
 	/* 选择按键用到的GPIO */	
   GPIO_InitStructure.GPIO_Pin = KEY1_INT_GPIO_PIN;
   /* 配置为浮空输入 */	
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  //GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(KEY1_INT_GPIO_PORT, &GPIO_InitStructure);
 
 	/* 选择EXTI的信号源 */
-  GPIO_EXTILineConfig(KEY1_INT_EXTI_PORTSOURCE, KEY1_INT_EXTI_PINSOURCE); 
-  EXTI_InitStructure.EXTI_Line = KEY1_INT_EXTI_LINE;
+  //GPIO_EXTILineConfig(KEY1_INT_EXTI_PORTSOURCE, KEY1_INT_EXTI_PINSOURCE); 
+  //EXTI_InitStructure.EXTI_Line = KEY1_INT_EXTI_LINE;
 	
 	/* EXTI为中断模式 */
   //EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
@@ -71,12 +73,14 @@ void EXTI_Key_Config(void)
 	/* 选择按键用到的GPIO */	
   GPIO_InitStructure.GPIO_Pin = KEY2_INT_GPIO_PIN;
   /* 配置为浮空输入 */	
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  //GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(KEY2_INT_GPIO_PORT, &GPIO_InitStructure);
 
 	/* 选择EXTI的信号源 */
-  GPIO_EXTILineConfig(KEY2_INT_EXTI_PORTSOURCE, KEY2_INT_EXTI_PINSOURCE); 
-  EXTI_InitStructure.EXTI_Line = KEY2_INT_EXTI_LINE;
+  //GPIO_EXTILineConfig(KEY2_INT_EXTI_PORTSOURCE, KEY2_INT_EXTI_PINSOURCE); 
+  //EXTI_InitStructure.EXTI_Line = KEY2_INT_EXTI_LINE;
 	
 	/* EXTI为中断模式 */
   //EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
@@ -101,7 +105,7 @@ void LED_GPIO_Config(void)
 		GPIO_InitTypeDef GPIO_InitStructure;
 
 		/*开启LED相关的GPIO外设时钟*/
-		RCC_APB2PeriphClockCmd( LED1_GPIO_CLK | LED2_GPIO_CLK , ENABLE);
+		RCC_APB2PeriphClockCmd(LED1_GPIO_CLK | LED2_GPIO_CLK , ENABLE);
 		/*选择要控制的GPIO引脚*/
 		GPIO_InitStructure.GPIO_Pin = LED1_GPIO_PIN;	
 

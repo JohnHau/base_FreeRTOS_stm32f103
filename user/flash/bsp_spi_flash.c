@@ -20,6 +20,88 @@
 static __IO uint32_t  SPITimeout = SPIT_LONG_TIMEOUT;    
 static uint16_t SPI_TIMEOUT_UserCallback(uint8_t errorCode);
 
+
+
+/**
+  * @brief  SPI_CPOL_CPHA_nRF24L01_Init初始化
+  * @param  无
+  * @retval 无
+  */
+void SPI_CPOL_CPHA_nRF24L01_Init(void)
+{
+ 
+//============================================================
+
+#if 1
+	SPI_InitTypeDef  SPI_InitStructure;
+
+	
+	
+	SPI_Cmd(FLASH_SPIx , DISABLE);
+  /* SPI 模式配置 */
+  // FLASH芯片 支持SPI模式0及模式3，据此设置CPOL CPHA
+  SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+  SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
+  SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
+	
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
+  SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
+	
+	
+  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
+  SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;
+  SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
+  SPI_InitStructure.SPI_CRCPolynomial = 7;
+  SPI_Init(FLASH_SPIx , &SPI_InitStructure);
+
+  /* 使能 SPI  */
+  SPI_Cmd(FLASH_SPIx , ENABLE);
+	
+	
+	
+	#endif
+	
+}
+
+
+/**
+  * @brief  SPI_CPOL_CPHA_nRF24L01_Init初始化
+  * @param  无
+  * @retval 无
+  */
+void SPI_CPOL_CPHA_Flash_Init(void)
+{
+ 
+//============================================================
+
+#if 1
+	SPI_InitTypeDef  SPI_InitStructure;
+  SPI_Cmd(FLASH_SPIx , DISABLE);
+  /* SPI 模式配置 */
+  // FLASH芯片 支持SPI模式0及模式3，据此设置CPOL CPHA
+  SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+  SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
+  SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
+	
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;
+  SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
+	
+	
+  SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
+  SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;
+  SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
+  SPI_InitStructure.SPI_CRCPolynomial = 7;
+  SPI_Init(FLASH_SPIx , &SPI_InitStructure);
+
+  /* 使能 SPI  */
+  SPI_Cmd(FLASH_SPIx , ENABLE);
+	
+	
+	
+	#endif
+	
+}
+
 /**
   * @brief  SPI_FLASH初始化
   * @param  无
@@ -27,15 +109,21 @@ static uint16_t SPI_TIMEOUT_UserCallback(uint8_t errorCode);
   */
 void SPI_FLASH_Init(void)
 {
-  SPI_InitTypeDef  SPI_InitStructure;
+ 
+//============================================================
+
+#if 1
+	SPI_InitTypeDef  SPI_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
 	
 	/* 使能SPI时钟 */
-	FLASH_SPI_APBxClock_FUN ( FLASH_SPI_CLK, ENABLE );
+	FLASH_SPI_APBxClock_FUN (FLASH_SPI_CLK, ENABLE);
 	
 	/* 使能SPI引脚相关的时钟 */
- 	FLASH_SPI_CS_APBxClock_FUN ( FLASH_SPI_CS_CLK|FLASH_SPI_SCK_CLK|
-																	FLASH_SPI_MISO_PIN|FLASH_SPI_MOSI_PIN, ENABLE );
+ 	FLASH_SPI_CS_APBxClock_FUN (FLASH_SPI_CS_CLK|FLASH_SPI_SCK_CLK|FLASH_SPI_MISO_PIN|FLASH_SPI_MOSI_PIN, ENABLE);
+
+	
+	
 	
   /* 配置SPI的 CS引脚，普通IO即可 */
   GPIO_InitStructure.GPIO_Pin = FLASH_SPI_CS_PIN;
@@ -64,8 +152,17 @@ void SPI_FLASH_Init(void)
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
   SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-  SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;
+	
+	
+	
+  SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;//W25Q64
   SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
+	
+	//SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;//nRF24L01
+  //SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
+	
+	
+	
   SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
   SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;
   SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
@@ -74,6 +171,10 @@ void SPI_FLASH_Init(void)
 
   /* 使能 SPI  */
   SPI_Cmd(FLASH_SPIx , ENABLE);
+	
+	
+	
+	#endif
 	
 }
  /**
@@ -299,6 +400,8 @@ void SPI_FLASH_BufferRead(u8* pBuffer, u32 ReadAddr, u16 NumByteToRead)
   SPI_FLASH_CS_HIGH();
 }
 
+
+
  /**
   * @brief  读取FLASH ID
   * @param 	无
@@ -357,6 +460,9 @@ u32 SPI_FLASH_ReadDeviceID(void)
 
   return Temp;
 }
+
+
+
 /*******************************************************************************
 * Function Name  : SPI_FLASH_StartReadSequence
 * Description    : Initiates a read data byte (READ) sequence from the Flash.

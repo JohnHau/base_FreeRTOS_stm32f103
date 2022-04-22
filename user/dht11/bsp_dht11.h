@@ -65,7 +65,7 @@ typedef struct
 #define      DHT11_Dout_GPIO_CLK                       RCC_APB2Periph_GPIOC
 
 #define      DHT11_Dout_GPIO_PORT                      GPIOC
-#define      DHT11_Dout_GPIO_PIN                       GPIO_Pin_0
+#define      DHT11_Dout_GPIO_PIN                       GPIO_Pin_15//GPIO_Pin_0
 
 
 

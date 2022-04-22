@@ -632,6 +632,11 @@
               <FileType>1</FileType>
               <FilePath>..\user\rtc\bsp_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>24L01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\nRF24L01\24L01.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

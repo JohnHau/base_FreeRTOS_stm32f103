@@ -346,7 +346,7 @@ uint32_t stp_msg_process(stp_frame_t *stp_usr_msg)
 									 
 									 
 									 
-									   send_stp_frame(USART3,dht11_rt,sizeof(dht11_rt),mn++);
+									   send_stp_frame(DEBUG_USARTx,dht11_rt,sizeof(dht11_rt),mn++);
 								 }
 								 
 								 
@@ -468,13 +468,14 @@ void stp_thread(void)
 	BinarySem_stp_Handle = xSemaphoreCreateBinary();
 	while(1)
 	{
-			 
-		
+			 	
 		
 		xReturn =xSemaphoreTake(BinarySem_stp_Handle,portMAX_DELAY);
-		
-		
+				
 		stp_msg_process(&stp_frame_test);
+		
+		//vTaskDelay(1000);
+		//printf("stp thread\r\n");
 
 
 	}
