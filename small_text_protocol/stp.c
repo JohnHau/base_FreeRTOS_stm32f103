@@ -158,7 +158,7 @@ uint16_t verify_stp_frame(stp_frame_t *stp_frame)
 	{
 	  stp_temp[6+i] = stp_frame->payload[i];
 	}
-#if 1	
+#if 0	
 	printf("\r\n====rec is\r\n");
 	for(i=0;i < stp_frame->payload_len +6;i++)
 	{
@@ -170,12 +170,12 @@ uint16_t verify_stp_frame(stp_frame_t *stp_frame)
 	
 	if(crc16 == stp_frame->crc16)
 	{
-		printf("\r\n====valid stp frame\r\n");
+	//	printf("\r\n====valid stp frame\r\n");
 		return 0;
 	}
 	else
 	{
-		printf("\r\n====invalid stp frame\r\n");
+	//	printf("\r\n====invalid stp frame\r\n");
 	}
 
 //	printf("crc is %x",crc16);
@@ -208,7 +208,7 @@ uint16_t send_stp_frame(int fd,uint8_t *payload,uint16_t payload_len,uint16_t pa
 
     stp_temp[payload_len + 6] = crc16/256;
     stp_temp[payload_len + 7] = crc16%256;
-    printf("crc16 is %x\r\n",crc16);
+    //printf("crc16 is %x\r\n",crc16);
     if(write(fd,stp_temp,payload_len + 8) != (payload_len + 8))
     {
 	    printf("error:send stp frame\r\n");
