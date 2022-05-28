@@ -637,6 +637,11 @@
               <FileType>1</FileType>
               <FilePath>..\user\nRF24L01\24L01.c</FilePath>
             </File>
+            <File>
+              <FileName>flash_memory.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\flash\flash_memory.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

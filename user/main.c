@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "stm32f10x.h"
 #include "FreeRTOS.h"	
 #include "task.h"
@@ -12,6 +13,7 @@
 #include "small_text_protocol/stp.h"
 #include "CRC16/CRC16.h"
 #include "flash/bsp_spi_flash.h"
+#include "flash/flash_memory.h"
 #include "nRF24L01/24L01.h"
 
 
@@ -122,6 +124,14 @@ void xxxx_delay_ms(uint32_t n)
 	}
 
 }
+
+
+
+
+
+
+
+
 
 int main ( void )
 {
@@ -288,26 +298,25 @@ int main ( void )
 	
 #if 1
 	
+
 	
-#define  FLASH_WriteAddress     0x00000
-#define  FLASH_ReadAddress      FLASH_WriteAddress
-#define  FLASH_SectorToErase    FLASH_WriteAddress
+
 	
-	
-	SPI_CPOL_CPHA_nRF24L01_Init();
+	//SPI_CPOL_CPHA_nRF24L01_Init();
+	//SPI_CPOL_CPHA_Flash_Init();
 		/* 8M串行flash W25Q64初始化 */
 	SPI_FLASH_Init();
 	
-	/* 获取 Flash Device ID */
+
+  test_flash_memory();
 	
 	
-	//u16 xid = SPI_Flash_ReadID();
-	//printf("xid is %x\n",xid);
-	//while(1);
 	
-	DeviceID = SPI_FLASH_ReadDeviceID();	
+	while(1);
 	delay( 200 );
-	
+	#define  FLASH_WriteAddress     0x00000
+#define  FLASH_ReadAddress      FLASH_WriteAddress
+#define  FLASH_SectorToErase    FLASH_WriteAddress
 	/* 获取 SPI Flash ID */
 	FlashID = SPI_FLASH_ReadID();	
 	printf("\r\n FlashID is 0x%X,Manufacturer Device ID is 0x%X\r\n", FlashID, DeviceID);

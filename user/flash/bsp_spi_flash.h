@@ -12,6 +12,11 @@
 #define SPI_FLASH_PageSize              256
 #define SPI_FLASH_PerWritePageSize      256
 
+#define FLASH_MEMORY_PAGE_SIZE   256
+
+
+
+
 /*命令定义-开头*******************************/
 #define W25X_WriteEnable		      0x06 
 #define W25X_WriteDisable		      0x04 
@@ -145,6 +150,22 @@ void SPI_FLASH_WaitForWriteEnd(void);
 
 void SPI_CPOL_CPHA_Flash_Init(void);
 void SPI_CPOL_CPHA_nRF24L01_Init(void);
+
+
+
+
+
+uint32_t flash_read_JEDEC_ID(void);
+
+
+void flash_sector_erase(uint32_t SectorAddr);
+
+void flash_page_program(uint32_t WriteAddr,uint8_t* pBuffer,uint32_t NumByteToWrite);
+
+void flash_normal_read(uint32_t ReadAddr,uint8_t* pBuffer,uint32_t NumByteToRead);
+
+
+
 
 
 

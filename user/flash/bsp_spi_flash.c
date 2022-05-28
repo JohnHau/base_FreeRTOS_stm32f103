@@ -204,6 +204,50 @@ void SPI_FLASH_SectorErase(u32 SectorAddr)
   SPI_FLASH_WaitForWriteEnd();
 }
 
+
+
+
+ /**
+  * @brief  擦除FLASH扇区
+  * @param  SectorAddr：要擦除的扇区地址
+  * @retval 无
+  */
+void flash_sector_erase(uint32_t SectorAddr)
+{
+  /* 发送FLASH写使能命令 */
+  SPI_FLASH_WriteEnable();
+  SPI_FLASH_WaitForWriteEnd();
+  /* 擦除扇区 */
+  /* 选择FLASH: CS低电平 */
+  SPI_FLASH_CS_LOW();
+  /* 发送扇区擦除指令*/
+  SPI_FLASH_SendByte(W25X_SectorErase);
+  /*发送擦除扇区地址的高位*/
+  SPI_FLASH_SendByte((SectorAddr & 0xFF0000) >> 16);
+  /* 发送擦除扇区地址的中位 */
+  SPI_FLASH_SendByte((SectorAddr & 0xFF00) >> 8);
+  /* 发送擦除扇区地址的低位 */
+  SPI_FLASH_SendByte(SectorAddr & 0xFF);
+  /* 停止信号 FLASH: CS 高电平 */
+  SPI_FLASH_CS_HIGH();
+  /* 等待擦除完毕*/
+  SPI_FLASH_WaitForWriteEnd();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  /**
   * @brief  擦除FLASH扇区，整片擦除
   * @param  无
@@ -270,6 +314,61 @@ void SPI_FLASH_PageWrite(u8* pBuffer, u32 WriteAddr, u16 NumByteToWrite)
   /* 等待写入完毕*/
   SPI_FLASH_WaitForWriteEnd();
 }
+
+
+
+
+ /**
+  * @brief  对FLASH按页写入数据，调用本函数写入数据前需要先擦除扇区
+  * @param	pBuffer，要写入数据的指针
+  * @param WriteAddr，写入地址
+  * @param  NumByteToWrite，写入数据长度，必须小于等于SPI_FLASH_PerWritePageSize
+  * @retval 无
+  */
+void flash_page_program(uint32_t WriteAddr,uint8_t* pBuffer,uint32_t NumByteToWrite)
+{
+  /* 发送FLASH写使能命令 */
+  SPI_FLASH_WriteEnable();
+
+  /* 选择FLASH: CS低电平 */
+  SPI_FLASH_CS_LOW();
+  /* 写页写指令*/
+  SPI_FLASH_SendByte(W25X_PageProgram);
+  /*发送写地址的高位*/
+  SPI_FLASH_SendByte((WriteAddr & 0xFF0000) >> 16);
+  /*发送写地址的中位*/
+  SPI_FLASH_SendByte((WriteAddr & 0xFF00) >> 8);
+  /*发送写地址的低位*/
+  SPI_FLASH_SendByte(WriteAddr & 0xFF);
+
+  if(NumByteToWrite > SPI_FLASH_PerWritePageSize)
+  {
+     NumByteToWrite = SPI_FLASH_PerWritePageSize;
+     FLASH_ERROR("SPI_FLASH_PageWrite too large!"); 
+  }
+
+  /* 写入数据*/
+  while (NumByteToWrite--)
+  {
+    /* 发送当前要写入的字节数据 */
+    SPI_FLASH_SendByte(*pBuffer);
+    /* 指向下一字节数据 */
+    pBuffer++;
+  }
+
+  /* 停止信号 FLASH: CS 高电平 */
+  SPI_FLASH_CS_HIGH();
+
+  /* 等待写入完毕*/
+  SPI_FLASH_WaitForWriteEnd();
+}
+
+
+
+
+
+
+
 
  /**
   * @brief  对FLASH写入数据，调用本函数写入数据前需要先擦除扇区
@@ -402,6 +501,59 @@ void SPI_FLASH_BufferRead(u8* pBuffer, u32 ReadAddr, u16 NumByteToRead)
 
 
 
+
+
+ /**
+  * @brief  读取FLASH数据
+  * @param 	pBuffer，存储读出数据的指针
+  * @param   ReadAddr，读取地址
+  * @param   NumByteToRead，读取数据长度
+  * @retval 无
+  */
+void flash_normal_read(uint32_t ReadAddr,uint8_t* pBuffer,uint32_t NumByteToRead)
+{
+  /* 选择FLASH: CS低电平 */
+  SPI_FLASH_CS_LOW();
+
+  /* 发送 读 指令 */
+  SPI_FLASH_SendByte(W25X_ReadData);
+
+  /* 发送 读 地址高位 */
+  SPI_FLASH_SendByte((ReadAddr & 0xFF0000) >> 16);
+  /* 发送 读 地址中位 */
+  SPI_FLASH_SendByte((ReadAddr& 0xFF00) >> 8);
+  /* 发送 读 地址低位 */
+  SPI_FLASH_SendByte(ReadAddr & 0xFF);
+	
+	/* 读取数据 */
+  while (NumByteToRead--) /* while there is data to be read */
+  {
+    /* 读取一个字节*/
+    *pBuffer = SPI_FLASH_SendByte(Dummy_Byte);
+    /* 指向下一个字节缓冲区 */
+    pBuffer++;
+  }
+
+  /* 停止信号 FLASH: CS 高电平 */
+  SPI_FLASH_CS_HIGH();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  /**
   * @brief  读取FLASH ID
   * @param 	无
@@ -434,6 +586,53 @@ u32 SPI_FLASH_ReadID(void)
 
   return Temp;
 }
+
+
+
+ /**
+  * @brief  读取FLASH JEDEC ID
+  * @param 	无
+  * @retval FLASH ID
+  */
+uint32_t flash_read_JEDEC_ID(void)
+{
+  uint32_t Temp = 0, Temp0 = 0, Temp1 = 0, Temp2 = 0;
+
+  /* 开始通讯：CS低电平 */
+  SPI_FLASH_CS_LOW();
+
+  /* 发送JEDEC指令，读取ID */
+  SPI_FLASH_SendByte(W25X_JedecDeviceID);
+
+  /* 读取一个字节数据 */
+  Temp0 = SPI_FLASH_SendByte(Dummy_Byte);//manufacturer ID (0xEF)
+
+  /* 读取一个字节数据 */
+  Temp1 = SPI_FLASH_SendByte(Dummy_Byte);//memory type (0x40)
+
+  /* 读取一个字节数据 */
+  Temp2 = SPI_FLASH_SendByte(Dummy_Byte);//memory capacity 0x15 (2^0x15 = 2097152 Byte = 2MByte )
+
+ /* 停止通讯：CS高电平 */
+  SPI_FLASH_CS_HIGH();
+
+  /*把数据组合起来，作为函数的返回值*/
+	Temp = (Temp0 << 16) | (Temp1 << 8) | Temp2;
+
+  return Temp;
+}
+
+
+
+
+
+
+
+
+
+
+
+
  /**
   * @brief  读取FLASH Device ID
   * @param 	无
