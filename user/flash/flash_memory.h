@@ -4,6 +4,12 @@
 
 uint32_t flash_memory_read_data(uint32_t addr,uint8_t*array,uint32_t size);
 uint32_t flash_memory_write_data(uint32_t addr,uint8_t*array,uint32_t size);
+
+
+
+uint32_t flash_memory_update_data(uint32_t addr,uint8_t*array,uint32_t size);
+
+
 void test_flash_memory(void);
 
 

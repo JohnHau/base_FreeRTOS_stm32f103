@@ -519,28 +519,12 @@ lv_label_set_text_static(lbl_03,"987");
  }
  
  
- 
- 
- 
  void lv_mytest(void)
  {
      lv_obj_t *label = lv_label_create(lv_scr_act());
      lv_label_set_text(label,"Btn");
      lv_obj_center(label);
  }
- 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
  
  
@@ -563,6 +547,20 @@ lv_label_set_text_static(lbl_03,"987");
 
 
  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  

@@ -13,7 +13,7 @@
 #define SPI_FLASH_PerWritePageSize      256
 
 #define FLASH_MEMORY_PAGE_SIZE   256
-
+#define FLASH_MEMORY_SECTOR_SIZE   4096
 
 
 

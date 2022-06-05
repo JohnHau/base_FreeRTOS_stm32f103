@@ -1,3 +1,5 @@
+#include <string.h>
+#include <math.h>
 #include "product.h"
 #include "flash_memory.h"
 #include "bsp_spi_flash.h"
@@ -29,6 +31,37 @@ void test_flash_memory(void)
 	//uint32_t flash_size = pow(2,0x15);
 	printf("flash size is %d\n",flash_size);
 	printf("flash ID is %x\n",FlashID);
+	
+	test_flash_tx_buf[0] = 0x90;
+	test_flash_tx_buf[1] = 0x91;
+	test_flash_tx_buf[2] = 0x92;
+	test_flash_tx_buf[3] = 0x93;
+	test_flash_tx_buf[4] = 0x94;
+	test_flash_tx_buf[5] = 0x95;
+	test_flash_tx_buf[6] = 0x96;
+	test_flash_tx_buf[7] = 0x97;
+	
+	flash_memory_update_data(4092,test_flash_tx_buf,8);
+	
+	
+	memset(test_flash_rx_buf,0,8);
+	flash_memory_read_data(4092,test_flash_rx_buf,8);
+	
+	
+	
+			printf("rx is %x %x %x %x %x %x %x %x\n",
+		test_flash_rx_buf[0],
+		test_flash_rx_buf[1],
+		test_flash_rx_buf[2],
+		test_flash_rx_buf[3],
+		test_flash_rx_buf[4],
+		test_flash_rx_buf[5],
+		test_flash_rx_buf[6],
+		test_flash_rx_buf[7]
+		);
+	
+	return ;
+	
 	
 	
 	//test_flash_tx_buf
@@ -208,15 +241,103 @@ uint32_t flash_memory_write_data(uint32_t addr,uint8_t*array,uint32_t size)
 			
 			}
 	
-	
-			
-	
-	
-	
-	
 
 		 return 0;
 }
+
+
+
+uint8_t sector_buf[FLASH_MEMORY_SECTOR_SIZE] = {0};
+uint32_t flash_memory_write_data_update_sector(uint32_t addr,uint8_t*array,uint32_t size)
+{
+	
+	uint32_t start_addr_in_sector = addr/FLASH_MEMORY_SECTOR_SIZE * FLASH_MEMORY_SECTOR_SIZE;
+	uint32_t end_addr_in_sector = start_addr_in_sector + FLASH_MEMORY_SECTOR_SIZE;
+	
+	
+	uint32_t addr_in_sector = addr %FLASH_MEMORY_SECTOR_SIZE;
+	
+	uint32_t largest_size_in_sector = end_addr_in_sector - addr_in_sector;
+	
+	
+	uint32_t copied_size_in_sector;
+	
+	if(size > largest_size_in_sector)
+	{
+	  copied_size_in_sector = largest_size_in_sector;//size - largest_size_in_sector;
+	}
+	else
+	{
+	  copied_size_in_sector = size;
+	}
+	
+	
+	//read a sector
+	flash_memory_read_data(start_addr_in_sector,sector_buf,FLASH_MEMORY_SECTOR_SIZE);
+	
+	
+	memcpy(sector_buf + addr_in_sector,array,copied_size_in_sector);
+	
+	
+	flash_sector_erase(start_addr_in_sector);
+	//update sector
+	flash_memory_write_data(start_addr_in_sector,sector_buf,FLASH_MEMORY_SECTOR_SIZE);
+
+	//return   (size - size_in_sector);
+	return   (copied_size_in_sector);
+
+}
+
+
+
+uint32_t flash_memory_update_data(uint32_t addr,uint8_t*array,uint32_t size)
+{
+	
+  uint32_t  cur_addr = addr;
+	uint8_t*  cur_array = array;
+	uint32_t  cur_size = size;
+	uint32_t  programmed_size =0;
+	while(cur_size)
+	{
+	
+	
+	  programmed_size = flash_memory_write_data_update_sector(cur_addr,cur_array,cur_size);
+		
+		cur_size  -= programmed_size;
+	  cur_array += programmed_size;
+	  cur_addr  += programmed_size;
+		printf("programmed size is %d\n",programmed_size);
+	}
+	
+	return cur_size;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
